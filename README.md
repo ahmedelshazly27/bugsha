@@ -74,10 +74,11 @@ page logs no errors. `tsc --noEmit` reports nothing in `app/` (the three errors 
 does report are pre-existing Cloudflare Workers types in `db/` and `worker/`), and
 `eslint` reports 0 errors.
 
-**Note this is still not what is deployed.** `bugsha-launch` serves the marketing
-recreation from the design system, not this source. Deploying this Next.js app, or
-applying `web/DownloadSection.jsx` to the marketing bundle, are the two ways to get
-a working form in front of real visitors.
+**This is what is deployed.** The `bugsha` Vercel project builds this directory
+from `main` and serves it at bugsha.vercel.app. `site/vercel.json` pins the build to
+`next build`, so the Cloudflare Workers build script is not involved in hosting.
+The older `bugsha-launch` project still serves the marketing recreation with the
+dead form; `web/DownloadSection.jsx` is there if you ever want to wire that one too.
 
 The personal photos that shipped alongside the source in the upload were not
 committed.
@@ -118,7 +119,7 @@ Applied to the **Bugsha** project (`qrmyhruvnqmjwxcnkocj`) in the
 | `waitlist-signup` | deployed, v4, `verify_jwt: false` |
 | `waitlist-unsubscribe` | deployed, v4, `verify_jwt: false` |
 | Secrets (`RESEND_API_KEY`, …) | set — sending verified against `delivered@resend.dev` |
-| Landing page wiring | **not done** — see below |
+| Website | **live** at bugsha.vercel.app, form wired |
 
 Endpoint: `https://qrmyhruvnqmjwxcnkocj.supabase.co/functions/v1/waitlist-signup`
 
@@ -128,7 +129,13 @@ an unguessable token on unsubscribe).
 
 ### Still to do
 
-**1. Point the landing page at the endpoint.** The shipped waitlist panel
+**1. Attach `bugsha.app`.** The site is live at
+[bugsha.vercel.app](https://bugsha.vercel.app) from the `bugsha` Vercel project
+(linked to this repo, `main` → production, root directory `site/`). The domain
+still has to be added to that project: **Vercel → bugsha → Settings → Domains →
+Add `bugsha.app`**. No API tool exposed here can do it.
+
+**2. Point the old marketing bundle at the endpoint** (only if you keep serving it). The shipped waitlist panel
 (`DownloadSection` in `ui_kits/marketing/site-ui.jsx`) is a stub — its submit
 handler flips local state and throws the address away:
 
@@ -147,13 +154,11 @@ original function, and set the endpoint before the bundle runs:
 If you'd rather not touch the bundle at all, `web/waitlist.js` attaches to any
 `form.waitlist-form` in the capture phase and does the same job.
 
-**2. Tighten CORS.** `WAITLIST_ALLOWED_ORIGINS` is unset, so any origin may post.
+**3. Tighten CORS.** `WAITLIST_ALLOWED_ORIGINS` is unset, so any origin may post.
 Set it to the real domains once they are final.
 
-**3. Check `bugsha.app` actually serves the site.** Emails now link to
-`https://bugsha.app` (the `WAITLIST_SITE_URL` default), but that domain is not
-attached to the `bugsha-launch` Vercel project — it only has its two `vercel.app`
-hostnames. Until it is, the "See how Bugsha works" button points nowhere.
+Emails link to `https://bugsha.app`, so those links start resolving as soon as the
+domain is attached.
 
 ## Reproducing the database from scratch
 
