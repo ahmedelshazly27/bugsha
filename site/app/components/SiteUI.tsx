@@ -233,7 +233,13 @@ export function MotionProvider() {
 
 type SignupResult = { ok: boolean; alreadyOnList?: boolean; position?: number | null; error?: string };
 
-const WAITLIST_ENDPOINT = process.env.NEXT_PUBLIC_WAITLIST_ENDPOINT ?? "";
+// The waitlist endpoint is a public URL, not a secret — the form is meant to be
+// posted to by anonymous visitors. Defaulting to it means the site deploys and
+// works with no build configuration; set NEXT_PUBLIC_WAITLIST_ENDPOINT to point
+// a build at a different Supabase project.
+const WAITLIST_ENDPOINT =
+  process.env.NEXT_PUBLIC_WAITLIST_ENDPOINT ??
+  "https://qrmyhruvnqmjwxcnkocj.supabase.co/functions/v1/waitlist-signup";
 
 /**
  * Pre-launch waitlist panel.
