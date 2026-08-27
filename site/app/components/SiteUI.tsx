@@ -11,6 +11,23 @@ export function Arrow() {
   return <span className="arrow" aria-hidden="true">↗</span>;
 }
 
+/**
+ * The Bugsha mark: a square of cloth with its top corner turned down.
+ *
+ * This is the design system's Kerchief, which supersedes the CSS-drawn rotated
+ * square in `BrandMark` above. The fold is a lighter plane, never a cut-out, so
+ * on a white mark over the violet panel it takes the panel colour.
+ */
+export function Kerchief({ size = 26, color = "#FFFFFF", fold = "#5B21B6" }:
+  { size?: number; color?: string; fold?: string }) {
+  return (
+    <svg className="kerchief" width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
+      <path fill={color} d="M24 2.5 45.5 24 24 45.5 2.5 24 24 2.5Z" />
+      <path fill={fold} d="M12.5 14h23L24 25.5 12.5 14Z" />
+    </svg>
+  );
+}
+
 export function CookieReveal() {
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -132,7 +149,7 @@ export function SiteHeader() {
         <Link href="/#faq" onClick={() => setOpen(false)}>FAQ</Link>
       </nav>
       <div className="nav-actions">
-        <Link className="button button-dark nav-cta" href="/#download">Get the app <Arrow /></Link>
+        <Link className="button button-dark nav-cta" href="/#waitlist">Join the waitlist <Arrow /></Link>
         <button className="menu-button" aria-label={open ? "Close navigation" : "Open navigation"} aria-controls="main-navigation" aria-expanded={open} onClick={() => setOpen(!open)}><i /><i /></button>
       </div>
     </header>
@@ -214,15 +231,108 @@ export function MotionProvider() {
   return null;
 }
 
+type SignupResult = { ok: boolean; alreadyOnList?: boolean; position?: number | null; error?: string };
+
+const WAITLIST_ENDPOINT = process.env.NEXT_PUBLIC_WAITLIST_ENDPOINT ?? "";
+
+/**
+ * Pre-launch waitlist panel.
+ *
+ * Bugsha has not opened anywhere yet, so this replaces the app-store download
+ * panel that used to sit here: the stores are marked "soon" and the conversion
+ * is the waitlist. Posts to the `waitlist-signup` Supabase edge function, which
+ * stores the signup and sends the confirmation email.
+ */
 export function DownloadSection() {
+  const [email, setEmail] = useState("");
+  const [area, setArea] = useState("");
+  const [company, setCompany] = useState("");   // honeypot — humans leave it empty
+  const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
+  const [error, setError] = useState("");
+  const [result, setResult] = useState<SignupResult | null>(null);
+
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const address = email.trim();
+    if (!address || status === "sending") return;
+
+    setStatus("sending");
+    setError("");
+
+    try {
+      if (!WAITLIST_ENDPOINT) throw new Error("NEXT_PUBLIC_WAITLIST_ENDPOINT is not set");
+      const res = await fetch(WAITLIST_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: address,
+          area: area || undefined,
+          company: company || undefined,
+          source: "site-waitlist",
+          locale: document.documentElement.lang || undefined,
+        }),
+      });
+      const payload: SignupResult = await res.json().catch(() => ({ ok: res.ok }));
+
+      if (payload?.ok) {
+        setResult(payload);
+        setStatus("done");
+      } else {
+        setStatus("error");
+        setError(payload?.error || "Something went wrong. Please try again.");
+      }
+    } catch {
+      setStatus("error");
+      setError("Network hiccup — please try again.");
+    }
+  }
+
   return (
-    <section className="download-section" id="download">
+    <section className="download-section" id="waitlist">
       <div className="download-panel">
         <div className="download-copy" data-reveal>
-          <span className="eyebrow light">YOUR NEXT PICKUP COULD BE TONIGHT</span>
-          <h2>Something good is waiting nearby.</h2>
-          <p>Browse tonight’s Bugshas, reserve in the app and collect inside the pickup window.</p>
-          <div className="store-row"><a className="store-badge" href="mailto:hello@bugsha.com"><small>Download on the</small><strong>App Store</strong></a><a className="store-badge" href="mailto:hello@bugsha.com"><small>GET IT ON</small><strong>Google Play</strong></a></div>
+          <span className="eyebrow light">LAUNCHING IN KUWAIT &amp; EGYPT</span>
+          <h2>Be first in line.</h2>
+          <p>We are opening in Kuwait and Egypt. Join the waitlist and we will tell you the moment kitchens near you start listing—early access, before the app opens publicly.</p>
+          {status === "done" ? (
+            <div className="waitlist-done" role="status">
+              <Kerchief />
+              <div>
+                <strong>{result?.alreadyOnList ? "You are already on the list." : "You are on the list."}</strong>
+                <span>
+                  {result?.position
+                    ? `You are #${result.position} in line. We will email you before your city goes live.`
+                    : "We will email you before your city goes live."}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <form className="waitlist-form" onSubmit={submit} noValidate>
+              <label>
+                <span>Email</span>
+                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com" autoComplete="email" />
+              </label>
+              <label>
+                <span>Where</span>
+                <select value={area} onChange={(e) => setArea(e.target.value)}>
+                  <option value="">Choose country</option>
+                  <option>Kuwait</option>
+                  <option>Egypt</option>
+                </select>
+              </label>
+              <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true"
+                value={company} onChange={(e) => setCompany(e.target.value)} className="waitlist-hp" />
+              <button className="button button-light" type="submit" disabled={status === "sending"}>
+                {status === "sending" ? "Joining…" : <>Join the waitlist <Arrow /></>}
+              </button>
+              {error && <p role="alert" className="waitlist-error">{error}</p>}
+            </form>
+          )}
+          <div className="store-row">
+            <span className="store-badge is-soon"><small>SOON ON THE</small><strong>App Store</strong></span>
+            <span className="store-badge is-soon"><small>SOON ON</small><strong>Google Play</strong></span>
+          </div>
         </div>
         <div className="download-visual" data-reveal="scale"><Phone src="browse-en.png" /></div>
       </div>

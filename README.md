@@ -45,14 +45,39 @@ The two rules it enforces that this codebase had to obey:
 `site/` is `Bugsha-Website-Repo-v41`, the Next.js website source, kept in its own
 directory so it does not collide with the waitlist tooling at the root.
 
-**It is not what is deployed at `bugsha-launch`, and it has no waitlist.** Its
-`DownloadSection` (`site/app/components/SiteUI.tsx`) is the older app-store panel
-behind `id="download"`; the string "waitlist" does not appear anywhere in it. The
-live pre-launch site is the marketing recreation in
-`.claude/skills/bugsha-design/ui_kits/marketing/`, which is where the waitlist panel
-and `site.css` actually live — and that is what `web/DownloadSection.jsx` targets.
+**The waitlist is ported into it.** `DownloadSection` in
+`site/app/components/SiteUI.tsx` used to be an app-store panel behind
+`id="download"`; it is now the pre-launch waitlist behind `id="waitlist"`, posting
+to the same edge function. Along with it:
 
-Porting the waitlist into this Next.js source is a separate job; ask if you want it.
+- `site/app/globals.css` gains the `.waitlist-form` / `.waitlist-done` rules and
+  `.store-badge.is-soon`, ported from the marketing kit and adapted to this repo's
+  tokens and breakpoints (820 / 560, not the kit's 620).
+- The three "Get the app → #download" CTAs (nav, home hero, how-it-works) now read
+  "Join the waitlist → #waitlist". The app is not out; they pointed at a panel that
+  no longer exists.
+- The store badges are marked `is-soon` rather than linking to `mailto:`.
+- A `Kerchief` component is added and used in the success block. The design system
+  replaces this repo's CSS-drawn `BrandMark` with the Kerchief; the rest of the site
+  still uses the old mark, which is a separate migration.
+
+Set the endpoint at build time:
+
+```
+NEXT_PUBLIC_WAITLIST_ENDPOINT=https://qrmyhruvnqmjwxcnkocj.supabase.co/functions/v1/waitlist-signup
+```
+
+Verified by running `npm run dev` and driving the real page in headless Chromium
+against a mock endpoint — see `site/preview/`. The payload sent is
+`{email, area, source: "site-waitlist", locale}`, the success block renders, and the
+page logs no errors. `tsc --noEmit` reports nothing in `app/` (the three errors it
+does report are pre-existing Cloudflare Workers types in `db/` and `worker/`), and
+`eslint` reports 0 errors.
+
+**Note this is still not what is deployed.** `bugsha-launch` serves the marketing
+recreation from the design system, not this source. Deploying this Next.js app, or
+applying `web/DownloadSection.jsx` to the marketing bundle, are the two ways to get
+a working form in front of real visitors.
 
 The personal photos that shipped alongside the source in the upload were not
 committed.

@@ -18,7 +18,7 @@ export default function HowItWorksPage() {
     <SiteHeader /><MotionProvider />
     <main className="interior-page">
       <section className="interior-hero process-hero">
-        <div data-reveal><span className="eyebrow">FOR CUSTOMERS</span><h1>Good food, found before it goes.</h1><p>Choose the place, category, price and pickup time. The exact mix stays a surprise until collection.</p><a className="button button-primary" href="#download">Get the app <Arrow /></a></div>
+        <div data-reveal><span className="eyebrow">FOR CUSTOMERS</span><h1>Good food, found before it goes.</h1><p>Choose the place, category, price and pickup time. The exact mix stays a surprise until collection.</p><a className="button button-primary" href="#waitlist">Join the waitlist <Arrow /></a></div>
         <figure className="process-hero-image" data-reveal="scale" data-scroll-media="34"><img src="/assets/bugsha-pickup-scene.webp" alt="A Bugsha customer collecting an order at a neighborhood café" loading="eager" decoding="async" /><figcaption><span>FROM OPEN TO RESERVED</span><strong>Usually under three minutes.</strong><small>Then collect inside the kitchen’s pickup window.</small></figcaption></figure>
       </section>
 

@@ -264,7 +264,7 @@ export default function Home() {
             <span className="eyebrow"><i className="live-dot" />KUWAIT · PICKUP TONIGHT</span>
             <h1>Tonight’s best food is already made.</h1>
             <p>Discover surprise bundles from Kuwait’s bakeries, cafés and co-ops—freshly packed at closing and worth around three times what you pay.</p>
-            <div className="hero-actions"><a className="button button-primary" href="#download">Get the app <Arrow /></a><Link className="text-link" href="/partners">For businesses <Arrow /></Link></div>
+            <div className="hero-actions"><a className="button button-primary" href="#waitlist">Join the waitlist <Arrow /></a><Link className="text-link" href="/partners">For businesses <Arrow /></Link></div>
             <div className="hero-proof"><span><strong>2.400 KD</strong><small>average Bugsha</small></span><span><strong>3×</strong><small>typical value</small></span><span><strong>Pickup only</strong><small>inside the window</small></span></div>
           </div>
           <div className="hero-scene" data-reveal="scale">
