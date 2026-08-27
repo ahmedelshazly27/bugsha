@@ -1,0 +1,22 @@
+Subject: You’re already on the Bugsha waitlist
+
+YOU’RE ALREADY IN.
+
+Good news — this email was already on the list, so there’s nothing else for you to do. We’ve refreshed your details below.
+
+Email: nour@example.com
+Area: Maadi
+Your spot: #128 in line
+
+WHAT HAPPENS NEXT
+1. We are signing up bakeries, restaurants and grocers near you.
+2. The moment there is enough good food around you, we email you an invite.
+3. You reserve a surprise bag, pick it up near closing, and pay a fraction of the price.
+
+Tonight’s best food is already made - it just needs someone to come get it.
+
+See how Bugsha works: https://bugsha.com
+
+---
+You are getting this because you joined the Bugsha waitlist with nour@example.com.
+Leave the waitlist: https://example.supabase.co/functions/v1/waitlist-unsubscribe?token=sample
