@@ -1,0 +1,34 @@
+/* Raw palette ramps. Never reference these in components — use tokens/semantic.css aliases. */
+:root{
+  /* ---- Night Market ---- */
+  --nm-ink-950:#08090D; --nm-ink-900:#0D0F16; --nm-ink-800:#141821; --nm-ink-700:#1D222E;
+  --nm-ink-600:#2A303E; --nm-ink-500:#3C4453; --nm-ink-300:#7C8798; --nm-ink-200:#A9B3C1;
+  --nm-paper-50:#FBF9F5; --nm-paper-100:#F2EFE9; --nm-paper-200:#E4E0D8;
+  --nm-amber-500:#FFC12B; --nm-amber-600:#F0A800; --nm-amber-300:#FFD977;
+  --nm-ember-500:#FF5C39; --nm-ember-600:#E8431F;
+  --nm-mint-500:#3DDC97; --nm-mint-600:#17B978; --nm-mint-200:#B7F3DA;
+  --nm-violet-500:#8E7BFF; --nm-blue-500:#6BA8FF;
+
+  /* ---- Bugsha (Diwaniya) — three colours: Sand, Cocoa, Terracotta ---- */
+  --dw-sand-50:#FDF9F2; --dw-sand-100:#F7EFE2; --dw-sand-200:#EBDFCD; --dw-sand-300:#DCCBB2;
+  --dw-cocoa-900:#241811; --dw-cocoa-800:#33241B; --dw-cocoa-700:#4A362A; --dw-cocoa-500:#7A6353;
+  --dw-cocoa-400:#9C8776;
+  --dw-terracotta-500:#B5502F; --dw-terracotta-600:#963E22; --dw-terracotta-200:#F0C9B9;
+
+  /* ---- Cold Chain ---- */
+  --cc-slate-950:#080D14; --cc-slate-900:#0E1620; --cc-slate-800:#18222E; --cc-slate-700:#2A3747;
+  --cc-slate-500:#5A6B7E; --cc-slate-400:#8494A6; --cc-slate-300:#B4C0CC;
+  --cc-slate-200:#D7DEE6; --cc-slate-100:#EDF1F5; --cc-slate-50:#F4F6F8; --cc-white:#FFFFFF;
+  --cc-blue-500:#1257E0; --cc-blue-600:#0B41B0; --cc-blue-100:#DCE7FD;
+  --cc-green-500:#00A878; --cc-green-600:#00805C; --cc-green-100:#D3F3E8;
+  --cc-amber-500:#E08A00; --cc-amber-100:#FCEBCB;
+  --cc-red-500:#D62F3D; --cc-red-100:#FBDDDF;
+  --cc-orange-500:#FF7A45;
+
+  /* ---- Ticket (wildcard) ---- */
+  --tk-paper-50:#F6F4EC; --tk-paper-100:#EFEDE6; --tk-paper-200:#E2DFD3; --tk-paper-300:#CFCBBB;
+  --tk-ink-900:#111110; --tk-ink-700:#2E2D2A; --tk-ink-500:#5C5A54; --tk-ink-400:#8B8880;
+  --tk-red-500:#E4322B; --tk-red-600:#BC2019;
+  --tk-blue-500:#1B4AE0;
+  --tk-green-600:#1E7A4C;
+}

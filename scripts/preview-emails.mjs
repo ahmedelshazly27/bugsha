@@ -14,7 +14,7 @@ const outDir = join(root, 'emails', 'preview');
 
 const SAMPLE = {
   email: 'nour@example.com',
-  city: 'Maadi',
+  area: 'Kuwait',
   siteUrl: 'https://bugsha.com',
   unsubscribeUrl: 'https://example.supabase.co/functions/v1/waitlist-unsubscribe?token=sample',
 };
@@ -26,7 +26,7 @@ const emails = [
     'admin-notify',
     adminNotifyEmail({
       email: SAMPLE.email,
-      city: SAMPLE.city,
+      area: SAMPLE.area,
       source: 'landing-page',
       referrer: 'https://bugsha.com/',
       userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) Safari/605.1.15',

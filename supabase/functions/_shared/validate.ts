@@ -8,7 +8,7 @@ export const MAX_FIELD = 120;
 
 export type SignupInput = {
   email: string;
-  city?: string;
+  area?: string;
   source?: string;
   locale?: string;
   /** Honeypot: real humans never fill this in. */
@@ -17,7 +17,7 @@ export type SignupInput = {
 
 export type ParsedSignup = {
   email: string;
-  city?: string;
+  area?: string;
   source?: string;
   locale?: string;
 };
@@ -48,7 +48,7 @@ export function parseSignup(
     ok: true,
     value: {
       email,
-      city: clean(input.city),
+      area: clean(input.area),
       source: clean(input.source, 60),
       locale: clean(input.locale, 12),
     },

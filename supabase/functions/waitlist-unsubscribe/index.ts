@@ -19,9 +19,9 @@ function page(title: string, message: string, status: number): Response {
     title,
     preheader: title,
     body: `
-      <h1 style="margin:0 0 12px;font-size:27px;line-height:1.2;font-weight:800;letter-spacing:-.03em;color:${brand.ink}">${esc(title)}</h1>
-      <p style="margin:0 0 18px;color:${brand.ink}">${esc(message)}</p>
-      <p style="margin:0"><a href="${esc(SITE_URL)}" style="color:${brand.purple};font-weight:700;text-decoration:none">Back to ${brand.name} &rarr;</a></p>
+      <h1 style="margin:0 0 12px;font-size:27px;line-height:1.2;font-weight:700;letter-spacing:-.03em;color:${brand.ink900}">${esc(title)}</h1>
+      <p style="margin:0 0 18px;color:${brand.ink900}">${esc(message)}</p>
+      <p style="margin:0"><a href="${esc(SITE_URL)}" style="color:${brand.violet700};font-weight:600;text-decoration:none">Back to ${brand.name} &rarr;</a></p>
     `,
   });
   return new Response(html, {

@@ -1,0 +1,13 @@
+:root{
+  --shadow-color-soft:220 30% 12%;
+  --elevation-0:none;
+  --elevation-1:0 1px 2px hsl(var(--shadow-color-soft)/.08);
+  --elevation-2:0 2px 8px hsl(var(--shadow-color-soft)/.10);
+  --elevation-3:0 8px 24px hsl(var(--shadow-color-soft)/.14);
+  --elevation-4:0 16px 48px hsl(var(--shadow-color-soft)/.20);
+  --elevation-sheet:0 -8px 32px hsl(var(--shadow-color-soft)/.18);
+  --elevation-inset:inset 0 1px 0 hsl(0 0% 100%/.06);
+  --elevation-print:3px 3px 0 var(--tk-ink-900); /* Ticket only */
+  --focus-ring-width:3px;
+  --focus-ring-offset:2px;
+}

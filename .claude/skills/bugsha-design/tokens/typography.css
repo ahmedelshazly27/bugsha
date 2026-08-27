@@ -1,0 +1,22 @@
+:root{
+  /* scale — mobile-first, tuned so nothing drops below 15px for body copy */
+  --text-display-xl-size:40px; --text-display-xl-line:44px;
+  --text-display-size:32px;    --text-display-line:36px;
+  --text-title-lg-size:24px;   --text-title-lg-line:30px;
+  --text-title-size:20px;      --text-title-line:26px;
+  --text-headline-size:17px;   --text-headline-line:24px;
+  --text-body-lg-size:17px;    --text-body-lg-line:26px;
+  --text-body-size:15px;       --text-body-line:22px;
+  --text-label-size:13px;      --text-label-line:18px;
+  --text-caption-size:12px;    --text-caption-line:16px;
+  --text-micro-size:11px;      --text-micro-line:14px;
+  --text-numeric-xl-size:34px; --text-numeric-xl-line:34px;
+  --text-code-size:36px;       --text-code-line:40px; /* redemption code */
+
+  --weight-regular:400; --weight-medium:500; --weight-semibold:600; --weight-bold:700; /* @kind other */
+  --tracking-tight:-0.02em; --tracking-normal:0em; --tracking-wide:0.04em; --tracking-caps:0.08em;
+
+  /* Arabic runs taller: bump line-height and drop optical size by ~1px via these multipliers */
+  --arabic-line-scale:1.18; /* @kind other */
+  --arabic-size-scale:0.96; /* @kind other */
+}

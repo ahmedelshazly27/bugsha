@@ -1,27 +1,47 @@
 # Bugsha
 
-Landing-page waitlist: capture + transactional email.
+Landing-page waitlist (capture + transactional email) and the Bugsha design system.
 
-A signup goes: **landing page form → `waitlist-signup` edge function → `public.waitlist` table → confirmation email to the subscriber + notification to the team.**
+A signup goes: **waitlist panel → `waitlist-signup` edge function → `public.waitlist` → confirmation email to the subscriber + notification to the team.**
 
 ```
+.claude/skills/bugsha-design/    the design system, installed as a skill
 supabase/
-  migrations/20260827120000_waitlist.sql   table, constraints, RLS, position fn
+  migrations/                    table, RLS, position fn, linter fixes, area rename
   functions/
-    _shared/cors.ts                        origin allowlist + JSON helper
-    _shared/validate.ts                    email validation, honeypot, length caps
-    _shared/email.ts                       Resend transport (swap here to change provider)
-    _shared/templates/brand.js             design tokens + email shell
-    _shared/templates/welcome.js           subscriber confirmation
-    _shared/templates/admin-notify.js      internal new-signup ping
-    waitlist-signup/index.ts               POST endpoint behind the form
-    waitlist-unsubscribe/index.ts          one-click opt-out from the email footer
+    _shared/cors.ts              origin allowlist + JSON helper
+    _shared/validate.ts          email validation, honeypot, length caps
+    _shared/email.ts             Resend transport (swap here to change provider)
+    _shared/templates/brand.js   design tokens + email shell
+    _shared/templates/welcome.js       subscriber confirmation
+    _shared/templates/admin-notify.js  internal new-signup ping
+    waitlist-signup/             POST endpoint behind the form
+    waitlist-unsubscribe/        one-click opt-out from the email footer
 web/
-  WaitlistForm.jsx                         React component for the site source
-  waitlist.js                              vanilla drop-in for the built page
-emails/preview/                            rendered previews (HTML, text, PNG)
-scripts/preview-emails.mjs                 regenerates the previews
+  DownloadSection.jsx            drop-in replacement for the site's waitlist panel
+  waitlist.js                    vanilla alternative, no rebuild required
+emails/preview/                  rendered previews (HTML, text, PNG)
+scripts/preview-emails.mjs       regenerates the previews
 ```
+
+## The design system
+
+`.claude/skills/bugsha-design/` is the Bugsha design system, placed as a Claude skill
+so it loads automatically in future sessions on this repo. It carries the tokens,
+components, guidelines, UI kits and brand photography.
+
+The two rules it enforces that this codebase had to obey:
+
+- **Violet `#5B21B6` and white — two colours only.** Never a third hue; status and
+  emphasis come from tint depth and weight. The email templates were rewritten
+  against this: an earlier draft used cream, gold and lilac accents, all removed.
+- **The mark is the Kerchief** — a square of cloth with its top corner turned down
+  (`assets/mark.svg`), one colour, the fold a lighter plane rather than a cut-out.
+  The wordmark is Archivo 600.
+
+One thing to know: the upload also contained `uploads/Bugsha-Website-Repo-v41/`
+(the Next.js site source) and some personal photos. Those were **not** committed —
+say the word and the site source can be added properly.
 
 ## Data model
 
@@ -30,13 +50,15 @@ scripts/preview-emails.mjs                 regenerates the previews
 | column | notes |
 | --- | --- |
 | `email` | `citext`, unique. Case-insensitive, so `A@b.com` and `a@b.com` are one person. |
-| `city` | Optional area from the form, for launch sequencing. |
+| `area` | The form's "Where" value — `Kuwait` or `Egypt` — for launch sequencing. |
 | `status` | `subscribed` / `unsubscribed` / `bounced`. |
 | `unsubscribe_token` | UUID that authorises one-click opt-out without a login. |
 | `source`, `referrer`, `user_agent` | Attribution for the signup. |
 | `welcome_email_sent_at` | Set only after Resend accepts the message. |
 
-RLS is **on with no policies**, and `anon`/`authenticated` are explicitly revoked. Nothing can read this table over the public API — every write goes through the edge function with the service role. That keeps the subscriber list off PostgREST entirely.
+RLS is **on with no policies**, and `anon`/`authenticated` are explicitly revoked.
+Nothing can read this table over the public API — every write goes through the edge
+function with the service role. That keeps the subscriber list off PostgREST entirely.
 
 ## Behaviour worth knowing
 
@@ -44,7 +66,7 @@ RLS is **on with no policies**, and `anon`/`authenticated` are explicitly revoke
 - **Re-signing up after unsubscribing opts you back in** — it's an explicit action by the person.
 - **A honeypot field (`company`) is silently dropped.** Bots get a `200` and nothing is stored.
 - **Email failure never costs a signup.** The row is committed first; sends are `allSettled` and only logged on failure.
-- **Position** (`#128 in line`) is counted over live subscribers via `waitlist_position()`.
+- **Position** (`#128 in line`) is counted over live subscribers, breaking ties on `(created_at, id)` so signups sharing a transaction timestamp still get distinct spots.
 
 ## Live
 
@@ -53,17 +75,17 @@ Applied to the **Bugsha** project (`qrmyhruvnqmjwxcnkocj`) in the
 
 | Piece | State |
 | --- | --- |
-| `public.waitlist` + `waitlist_position()` | applied (3 migrations) |
-| `waitlist-signup` | deployed, v1, `verify_jwt: false` |
-| `waitlist-unsubscribe` | deployed, v1, `verify_jwt: false` |
+| `public.waitlist` + `waitlist_position()` | applied (4 migrations) |
+| `waitlist-signup` | deployed, v2, `verify_jwt: false` |
+| `waitlist-unsubscribe` | deployed, v2, `verify_jwt: false` |
 | Secrets (`RESEND_API_KEY`, …) | **not set** — see below |
 | Landing page wiring | **not done** — see below |
 
 Endpoint: `https://qrmyhruvnqmjwxcnkocj.supabase.co/functions/v1/waitlist-signup`
 
-`verify_jwt` is off on both by design — they are public endpoints hit by
-anonymous visitors, and each implements its own protection (validation +
-honeypot on signup, an unguessable token on unsubscribe).
+`verify_jwt` is off on both by design — they are public endpoints hit by anonymous
+visitors, and each implements its own protection (validation + honeypot on signup,
+an unguessable token on unsubscribe).
 
 ### Still to do
 
@@ -79,19 +101,24 @@ supabase secrets set --env-file .env
 
 Or paste them into **Project Settings → Edge Functions → Secrets** in the dashboard.
 
-**2. Point the landing page at the endpoint.** The deployed `bugsha-launch` site
-has a `.waitlist-form` that posts nowhere, and its source is not in this repo, so
-this step has to happen wherever that source lives. Two options:
+**2. Point the landing page at the endpoint.** The shipped waitlist panel
+(`DownloadSection` in `ui_kits/marketing/site-ui.jsx`) is a stub — its submit
+handler flips local state and throws the address away:
 
-- Render `web/WaitlistForm.jsx` and set `VITE_WAITLIST_ENDPOINT`.
-- Or drop in `web/waitlist.js`, which needs no rebuild:
+```js
+const submit = event => { event.preventDefault(); if(email.trim()) setDone(true); };
+```
+
+`web/DownloadSection.jsx` is a drop-in replacement: same markup, class names and
+copy, so `site.css` needs no change — only the handler is wired. Paste it over the
+original function, and set the endpoint before the bundle runs:
 
 ```html
 <script>window.BUGSHA_WAITLIST_ENDPOINT = 'https://qrmyhruvnqmjwxcnkocj.supabase.co/functions/v1/waitlist-signup';</script>
-<script src="/waitlist.js" defer></script>
 ```
 
-Both expect the field names `email`, `city` and `company` (honeypot).
+If you'd rather not touch the bundle at all, `web/waitlist.js` attaches to any
+`form.waitlist-form` in the capture phase and does the same job.
 
 **3. Tighten CORS.** `WAITLIST_ALLOWED_ORIGINS` is unset, so any origin may post.
 Set it to the real domains once they are final.
@@ -105,47 +132,51 @@ supabase db push
 
 ## Emails
 
-Previews live in `emails/preview/` (`.html`, `.txt` and `.png` for each). Regenerate after any copy change:
+Previews live in `emails/preview/` (`.html`, `.txt` and `.png` for each). Regenerate
+after any copy change:
 
 ```bash
 npm run preview:emails
 ```
 
-Templates are dependency-free ESM shared by Deno (the edge functions) and Node (the preview script), so the copy has exactly one home. Palette is lifted from the live site: purple `#5B21B6`, ink `#1b1720`, cream `#f5f0e8`.
+Templates are dependency-free ESM shared by Deno (the edge functions) and Node (the
+preview script), so the copy has exactly one home. Voice follows the live site:
+Bugsha has not launched anywhere yet, it is opening in Kuwait and Egypt, and
+waitlist members get access first — no claims of history, no commercial terms.
 
-Every subscriber email carries a plain-text alternative, a hidden preheader and a working unsubscribe link.
+Every subscriber email carries a plain-text alternative, a hidden preheader and a
+working unsubscribe link.
 
 ## Verified against the deployed endpoint
 
-Driven from inside Postgres (this container cannot reach `supabase.co`), then
-the test rows were deleted:
+Driven from inside Postgres (this container cannot reach `supabase.co`), then the
+test rows were deleted:
 
 | Case | Result |
 | --- | --- |
-| New signup | `200 {ok, alreadyOnList: false, position: 1}` |
-| Repeat, different case (`smoke.test@EXAMPLE.com`) | `200 {alreadyOnList: true}`, same row, city updated |
+| New signup, `area: Kuwait` | `200 {ok, alreadyOnList: false, position: 1}` |
+| Repeat, different case + `area: Egypt` | `200 {alreadyOnList: true}`, one row, area updated |
 | Second person | `position: 2` |
-| `nope@localhost` | `400` "That email address doesn't look right." |
+| `x@y` / `nope@localhost` | `400` "That email address doesn't look right." |
 | No email | `400` "Please enter your email address." |
 | Honeypot filled | `200`, **no row written** |
 | Unsubscribe, valid token | `200` "You're off the list", status flipped |
-| Unsubscribe, unknown token | `404` |
-| Unsubscribe, malformed token | `400` |
+| Unsubscribe, unknown / malformed token | `404` / `400` |
 | Re-signup after unsubscribing | status back to `subscribed` |
+| Unsubscribe page renders | violet + Archivo present, no `undefined` |
 | **anon key `SELECT` on `waitlist`** | **`401` permission denied** |
 | **anon key `INSERT` on `waitlist`** | **`401` permission denied** |
 
 Supabase security advisors report no warnings. The one remaining INFO notice —
-"RLS enabled, no policies" — is the intended design, not an oversight: the table
-is deny-by-default and reachable only through the service role.
+"RLS enabled, no policies" — is the intended design, not an oversight: the table is
+deny-by-default and reachable only through the service role.
 
-Also verified locally before deploying:
-
-- `web/preview/*.png` — the form, its inline error state, and the success swap, driven through headless Chromium against a mock endpoint using the live site's own stylesheet.
-- `emails/preview/*.png` — both subscriber emails and the team notification as rendered.
+Also verified in a headless browser against a mock endpoint, using the real
+`site.css` from the design system: `web/preview/*.png` shows the form, its inline
+error state, and the success swap with the Kerchief mark.
 
 ## Choices made
 
-- **Resend** for delivery — it's the common pairing with Supabase Edge Functions and needs no SDK. Changing provider means rewriting `sendEmail` in `_shared/email.ts` and nothing else.
-- **Single opt-in.** Someone who typed their address into a waitlist form has opted in; a confirm-click step would cost signups. The schema has room for double opt-in later if a market requires it.
-- **The area picker ships empty** (`areas={[]}` hides it). Fill in the real launch areas — the sample data uses Cairo districts as a placeholder only.
+- **Resend** for delivery — the common pairing with Supabase Edge Functions, no SDK needed. Changing provider means rewriting `sendEmail` in `_shared/email.ts` and nothing else.
+- **Single opt-in.** Someone who typed their address into a waitlist form has opted in; a confirm-click step would cost signups. The schema has room for double opt-in later.
+- **`area`, not `city`.** The form's "Where" select is country-level (Kuwait / Egypt). `area` is honest now and still fits city-level values when launch sequencing gets finer.

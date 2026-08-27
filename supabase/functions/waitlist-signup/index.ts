@@ -48,7 +48,7 @@ Deno.serve(async (req: Request) => {
     return json(req, { ok: false, error: parsed.error }, 400);
   }
 
-  const { email, city, source, locale } = parsed.value;
+  const { email, area, source, locale } = parsed.value;
   const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
     auth: { persistSession: false },
   });
@@ -63,7 +63,7 @@ Deno.serve(async (req: Request) => {
 
   const row = {
     email,
-    city: city ?? null,
+    area: area ?? null,
     locale: locale ?? null,
     source: source ?? 'landing-page',
     referrer: clean(req.headers.get('referer'), 500) ?? null,
@@ -76,7 +76,7 @@ Deno.serve(async (req: Request) => {
   const { data: saved, error: saveError } = await supabase
     .from('waitlist')
     .upsert(row, { onConflict: 'email' })
-    .select('id, email, city, unsubscribe_token')
+    .select('id, email, area, unsubscribe_token')
     .single();
 
   if (saveError || !saved) {
@@ -97,7 +97,7 @@ Deno.serve(async (req: Request) => {
 
   const subscriberMail = welcomeEmail({
     email: saved.email,
-    city: saved.city ?? undefined,
+    area: saved.area ?? undefined,
     position: typeof position === 'number' ? position : undefined,
     siteUrl: SITE_URL,
     unsubscribeUrl,
@@ -124,7 +124,7 @@ Deno.serve(async (req: Request) => {
   if (admin) {
     const teamMail = adminNotifyEmail({
       email: saved.email,
-      city: saved.city ?? undefined,
+      area: saved.area ?? undefined,
       source: row.source ?? undefined,
       referrer: row.referrer ?? undefined,
       userAgent: row.user_agent ?? undefined,

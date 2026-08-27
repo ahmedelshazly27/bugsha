@@ -17,9 +17,12 @@
   var ENDPOINT =
     (typeof window !== 'undefined' && window.BUGSHA_WAITLIST_ENDPOINT) || '';
 
+  // The Kerchief: a square of cloth with its top corner turned down. White mark
+  // on the violet panel, so the fold takes the panel colour at full opacity.
   var MARK =
-    '<svg class="brand-mark" width="26" height="26" viewBox="410 230 380 340" aria-hidden="true">' +
-    '<path d="M600 250 770 400 600 550 430 400 600 250Z" fill="currentColor"/>' +
+    '<svg class="brand-mark" width="26" height="26" viewBox="0 0 48 48" aria-hidden="true">' +
+    '<path fill="#FFFFFF" d="M24 2.5 45.5 24 24 45.5 2.5 24 24 2.5Z"/>' +
+    '<path fill="#5B21B6" d="M12.5 14h23L24 25.5 12.5 14Z"/>' +
     '</svg>';
 
   function el(html) {
@@ -29,10 +32,10 @@
   }
 
   function showDone(form, result) {
-    var heading = result.alreadyOnList ? 'You’re already on the list' : 'You’re on the list';
+    var heading = result.alreadyOnList ? 'You are already on the list.' : 'You are on the list.';
     var detail = result.position
-      ? 'You’re #' + result.position + ' in line. We’ll email you the moment Bugsha opens near you.'
-      : 'We’ll email you the moment Bugsha opens near you.';
+      ? 'You are #' + result.position + ' in line. We will email you before your city goes live.'
+      : 'We will email you before your city goes live.';
 
     var done = el(
       '<div class="waitlist-done" role="status">' +
@@ -51,7 +54,7 @@
       if (!message) return;
       slot = el('<p class="waitlist-error" role="alert"></p>');
       slot.style.cssText =
-        'grid-column:1/-1;margin:2px 0 0;font-size:13.5px;color:#ff8a80';
+        'grid-column:1/-1;margin:2px 0 0;font-size:13.5px;color:#DDD6FE';
       form.appendChild(slot);
     }
     slot.textContent = message;
@@ -101,7 +104,7 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: email,
-        city: fieldValue(form, ['city', 'area']),
+        area: fieldValue(form, ['area', 'city']),
         company: fieldValue(form, ['company']), // honeypot
         source: form.dataset.source || 'landing-page',
         locale: document.documentElement.lang || undefined,
