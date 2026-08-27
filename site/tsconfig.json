@@ -30,5 +30,6 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "//": "db/ and worker/ are the Cloudflare Workers path. They need the bindings that `wrangler types` generates into worker-configuration.d.ts, which is not in this repo, so they cannot type check here and the Next.js app never imports them.",
+  "exclude": ["node_modules", "db", "worker", "drizzle", "examples"]
 }
