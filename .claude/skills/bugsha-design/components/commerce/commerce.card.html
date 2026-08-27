@@ -1,0 +1,34 @@
+<!-- @dsCard group="Components" viewport="700x420" name="Marketplace" subtitle="Bag card layouts, price, countdown, map pin, redemption, impact" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{padding:16px}</style></head><body><div id="root"></div>
+<script type="text/babel">
+const { BagCard, PriceTag, CountdownPill, PickupWindow, MapPin, ImpactStat, RedemptionCode, PaymentMethodRow } = window.SurplusKWDesignSystem_97ec90;
+const bag = { partner:"Kuwait Bakehouse", category:"bakery", priceNow:2, priceWas:6.5, from:"21:30", to:"22:30", distanceKm:1.4, bagsLeft:2, rating:4.7, ratingCount:218, tags:["Bakery","Veg"] };
+ReactDOM.createRoot(document.getElementById("root")).render(
+<div style={{display:"grid",gridTemplateColumns:"260px 1fr",gap:16,alignItems:"start"}}>
+  <div style={{display:"grid",gap:12}}>
+    <BagCard {...bag} minutesLeft={42} saved={false}/>
+    <BagCard {...bag} layout="row" partner="Beit Beirut" category="meals" priceNow={3} priceWas={9}/>
+  </div>
+  <div style={{display:"grid",gap:12}}>
+    <div style={{display:"flex",gap:12,flexWrap:"wrap",alignItems:"center"}}>
+      <PriceTag now={2} was={6.5} size="lg"/><CountdownPill minutesLeft={140}/><CountdownPill minutesLeft={42}/><CountdownPill minutesLeft={11}/><CountdownPill minutesLeft={55} state="reserved" label="Reserved"/>
+    </div>
+    <div style={{display:"flex",gap:12,flexWrap:"wrap",alignItems:"center"}}>
+      <PickupWindow day="Tonight" from="21:30" to="22:30" note="Drive-up lane open" size="lg"/>
+      <MapPin price={2} selected/><MapPin price={3.5}/><MapPin price={2.5} soldOut/>
+    </div>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+      <RedemptionCode code="KW-4821" partner="Kuwait Bakehouse" window="21:30–22:30"/>
+      <div style={{display:"grid",gap:8}}>
+        <PaymentMethodRow method="knet" selected/><PaymentMethodRow method="applepay"/>
+        <ImpactStat icon="shopping-bag" value={12} unit="meals" label="rescued since March"/>
+      </div>
+    </div>
+  </div>
+</div>);
+</script></body></html>

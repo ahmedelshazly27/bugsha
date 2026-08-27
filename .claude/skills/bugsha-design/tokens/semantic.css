@@ -1,0 +1,249 @@
+/* Semantic aliases. Components reference ONLY these.
+   Portable naming: --color-surface-canvas  ==  color.surface.canvas (SwiftUI/Compose/CSS).
+
+   BUGSHA — the brand. Two colours: Violet #5B21B6 and white. Nothing else is a brand colour.
+   Status is carried by tint depth, weight and icon — never by adding a hue.
+   :root is the shipping identity; the [data-variant] blocks below are retained exploration only. */
+
+:root{
+  /* ---- brand palette (the entire palette) ---- */
+  --violet-900:#2E1065; --violet-800:#4C1D95; --violet-700:#5B21B6; --violet-600:#6D28D9;
+  --violet-300:#C4B5FD; --violet-200:#DDD6FE; --violet-100:#EDE9FE; --violet-50:#F5F3FF;
+  --ink-900:#17141F; --ink-700:#312B40; --ink-500:#6B6579; --ink-400:#9A94A8;
+  --ink-200:#E7E4EE; --ink-100:#F1EFF6; --paper:#FFFFFF; --canvas:#F8F7FB;
+
+  /* surfaces */
+  --color-surface-canvas:var(--canvas);
+  --color-surface-raised:var(--paper);
+  --color-surface-sunken:var(--ink-100);
+  --color-surface-inverse:var(--ink-900);
+  --color-surface-brand:var(--violet-700);
+  --color-surface-overlay:hsl(258 40% 8% / .58);
+  --color-surface-scrim:linear-gradient(to top,hsl(258 40% 8% / .82),transparent);
+  /* text */
+  --color-text-primary:var(--ink-900);
+  --color-text-secondary:var(--ink-500);
+  --color-text-tertiary:var(--ink-400);
+  --color-text-inverse:#FFFFFF;
+  --color-text-on-brand:#FFFFFF;
+  --color-text-link:var(--violet-700);
+  /* borders */
+  --color-border-subtle:var(--ink-200);
+  --color-border-default:#DCD8E6;
+  --color-border-strong:var(--ink-700);
+  --color-border-focus:var(--violet-700);
+  /* brand */
+  --color-brand-primary:var(--violet-700);
+  --color-brand-hover:var(--violet-800);
+  --color-brand-press:var(--violet-900);
+  --color-brand-tint:var(--violet-100);
+  --color-brand-secondary:var(--ink-900);
+  /* semantic roles — violet or ink only */
+  --color-fresh:var(--ink-700);           --color-fresh-tint:var(--ink-100);
+  --color-time:var(--violet-700);         --color-time-tint:var(--violet-100);
+  --color-time-urgent:var(--violet-800);  --color-time-urgent-tint:var(--violet-200);
+  --color-error:#8B1D3F;                  --color-error-tint:#F6E4EA;
+  --color-info:var(--ink-700);            --color-info-tint:var(--ink-100);
+  --color-deal:var(--violet-700);         --color-deal-on:#FFFFFF;
+  --color-rating:var(--violet-700);
+  --color-partner-accent:var(--ink-900);
+  --color-partner-surface:var(--paper);
+  --color-skeleton:var(--ink-100);
+  /* type roles */
+  --font-display:var(--font-archivo);
+  --font-body:var(--font-archivo);
+  --font-numeric:var(--font-plex-mono);
+  --font-arabic-display:var(--font-alexandria);
+  --font-arabic-body:var(--font-alexandria);
+  /* shape + depth + motion */
+  --radius-card:10px; --radius-control:8px; --radius-chip:6px; --radius-sheet:16px; --radius-image:8px;
+  --border-card:1px;
+  --elevation-card:0 1px 2px hsl(258 30% 20% / .07);
+  --elevation-raised:0 8px 28px hsl(258 30% 20% / .16);
+  --motion-ease-brand:var(--motion-ease-standard);
+  --motion-duration-brand:var(--motion-duration-fast);
+  --texture-canvas:none; /* @kind other */
+  --cover-treatment:photo; /* @kind other */
+  --icon-stroke:2; /* @kind other */
+}
+
+[data-theme="dark"]{
+  --color-surface-canvas:#100D18;
+  --color-surface-raised:#1A1626;
+  --color-surface-sunken:#0A0812;
+  --color-surface-inverse:#FFFFFF;
+  --color-surface-brand:var(--violet-600);
+  --color-surface-overlay:hsl(258 45% 4% / .72);
+  --color-text-primary:#F6F4FB;
+  --color-text-secondary:#B4ADC4;
+  --color-text-tertiary:#8A8399;
+  --color-text-inverse:var(--ink-900);
+  --color-text-link:var(--violet-300);
+  --color-border-subtle:#2A2440;
+  --color-border-default:#3A3352;
+  --color-border-strong:#564C74;
+  --color-brand-primary:var(--violet-600);
+  --color-brand-hover:#7C3AED;
+  --color-brand-press:var(--violet-700);
+  --color-brand-tint:#241B45;
+  --color-fresh:#CFC7E4;                 --color-fresh-tint:#241F33;
+  --color-time:var(--violet-300);         --color-time-tint:#241B45;
+  --color-time-urgent:#A78BFA;            --color-time-urgent-tint:#2E2255;
+  --color-error:#E9799A;                  --color-error-tint:#3B1524;
+  --color-info:#CFC7E4;                   --color-info-tint:#241F33;
+  --color-deal:var(--violet-300);         --color-deal-on:var(--ink-900);
+  --color-rating:var(--violet-300);
+  --color-partner-accent:#F6F4FB;
+  --color-partner-surface:#1A1626;
+  --color-skeleton:#241F33;
+  --elevation-card:0 1px 2px hsl(0 0% 0% / .5);
+  --elevation-raised:0 10px 32px hsl(0 0% 0% / .6);
+}
+
+/* ================= COLD CHAIN ================= */
+[data-variant="cold-chain"]{
+  --color-surface-canvas:var(--cc-slate-50);
+  --color-surface-raised:var(--cc-white);
+  --color-surface-sunken:var(--cc-slate-100);
+  --color-surface-inverse:var(--cc-slate-900);
+  --color-surface-overlay:hsl(212 40% 8% / .5);
+  --color-surface-scrim:linear-gradient(to top,hsl(212 40% 8% / .72),transparent);
+  --color-text-primary:var(--cc-slate-900);
+  --color-text-secondary:var(--cc-slate-500);
+  --color-text-tertiary:var(--cc-slate-400);
+  --color-text-inverse:var(--cc-white);
+  --color-text-on-brand:var(--cc-white);
+  --color-text-link:var(--cc-blue-500);
+  --color-border-subtle:var(--cc-slate-100);
+  --color-border-default:var(--cc-slate-200);
+  --color-border-strong:var(--cc-slate-300);
+  --color-border-focus:var(--cc-blue-500);
+  --color-brand-primary:var(--cc-blue-500);
+  --color-brand-hover:var(--cc-blue-600);
+  --color-brand-press:var(--cc-blue-600);
+  --color-brand-tint:var(--cc-blue-100);
+  --color-brand-secondary:var(--cc-slate-700);
+  --color-fresh:var(--cc-green-600); --color-fresh-tint:var(--cc-green-100);
+  --color-time:#8C5600; --color-time-tint:var(--cc-amber-100);
+  --color-time-urgent:#C2470F; --color-time-urgent-tint:#FFE3D8;
+  --color-rating:var(--cc-amber-500);
+  --color-error:var(--cc-red-500); --color-error-tint:var(--cc-red-100);
+  --color-info:var(--cc-blue-500); --color-info-tint:var(--cc-blue-100);
+  --color-deal:#C64A15; --color-deal-on:var(--cc-white);
+  --color-partner-accent:var(--cc-slate-700);
+  --color-partner-surface:var(--cc-white);
+  --color-skeleton:var(--cc-slate-100);
+  --font-display:var(--font-plex-sans);
+  --font-body:var(--font-plex-sans);
+  --font-numeric:var(--font-plex-mono);
+  --font-arabic-display:var(--font-plex-arabic);
+  --font-arabic-body:var(--font-plex-arabic);
+  --radius-card:10px; --radius-control:8px; --radius-chip:6px; --radius-sheet:14px; --radius-image:8px;
+  --border-card:1px;
+  --elevation-card:0 1px 2px hsl(212 30% 20% / .07);
+  --elevation-raised:0 6px 20px hsl(212 30% 20% / .12);
+  --motion-ease-brand:var(--motion-ease-precise);
+  --motion-duration-brand:var(--motion-duration-fast);
+  --texture-canvas:none; /* @kind other */
+  --icon-stroke:1.75; /* @kind other */
+  --cover-treatment:glyph; /* @kind other */
+}
+[data-variant="cold-chain"][data-theme="dark"]{
+  --color-surface-canvas:var(--cc-slate-950);
+  --color-surface-raised:var(--cc-slate-800);
+  --color-surface-sunken:var(--cc-slate-900);
+  --color-surface-inverse:var(--cc-white);
+  --color-text-primary:#EAF0F6;
+  --color-text-secondary:var(--cc-slate-300);
+  --color-text-tertiary:var(--cc-slate-400);
+  --color-text-inverse:var(--cc-slate-950);
+  --color-text-link:#7FAEFF;
+  --color-border-subtle:var(--cc-slate-800);
+  --color-border-default:var(--cc-slate-700);
+  --color-border-strong:var(--cc-slate-500);
+  --color-brand-primary:#3D7BF0; --color-brand-tint:#12233F;
+  --color-fresh:#2FCB9B; --color-fresh-tint:#0B3329;
+  --color-time:#F5A62B; --color-time-tint:#3A2A0C;
+  --color-rating:#F5A62B;
+  --color-time-urgent:#FF8F63; --color-time-urgent-tint:#3E1E12;
+  --color-error:#FF6470; --color-error-tint:#3E1418;
+  --color-info:#3D7BF0; --color-info-tint:#12233F;
+  --color-deal:#FF9061;
+  --color-partner-accent:#B4C0CC;
+  --color-partner-surface:var(--cc-slate-800);
+  --color-skeleton:var(--cc-slate-800);
+  --elevation-card:0 1px 2px hsl(0 0% 0% / .5);
+  --elevation-raised:0 8px 24px hsl(0 0% 0% / .6);
+}
+
+/* ================= TICKET (wildcard) ================= */
+[data-variant="ticket"]{
+  --color-surface-canvas:var(--tk-paper-100);
+  --color-surface-raised:var(--tk-paper-50);
+  --color-surface-sunken:var(--tk-paper-200);
+  --color-surface-inverse:var(--tk-ink-900);
+  --color-surface-overlay:hsl(60 6% 7% / .6);
+  --color-surface-scrim:linear-gradient(to top,hsl(60 6% 7% / .8),transparent);
+  --color-text-primary:var(--tk-ink-900);
+  --color-text-secondary:var(--tk-ink-500);
+  --color-text-tertiary:var(--tk-ink-400);
+  --color-text-inverse:var(--tk-paper-50);
+  --color-text-on-brand:var(--tk-paper-50);
+  --color-text-link:var(--tk-red-500);
+  --color-border-subtle:var(--tk-paper-300);
+  --color-border-default:var(--tk-ink-900);
+  --color-border-strong:var(--tk-ink-900);
+  --color-border-focus:var(--tk-red-500);
+  --color-brand-primary:var(--tk-ink-900);
+  --color-brand-hover:var(--tk-ink-700);
+  --color-brand-press:var(--tk-ink-700);
+  --color-brand-tint:var(--tk-paper-200);
+  --color-brand-secondary:var(--tk-red-500);
+  --color-fresh:var(--tk-green-600); --color-fresh-tint:#D9E9DF;
+  --color-time:var(--tk-ink-900); --color-time-tint:var(--tk-paper-200);
+  --color-time-urgent:var(--tk-red-600); --color-time-urgent-tint:#F7DAD8;
+  --color-rating:var(--tk-ink-900);
+  --color-error:var(--tk-red-600); --color-error-tint:#F7DAD8;
+  --color-info:var(--tk-blue-500); --color-info-tint:#DBE2FA;
+  --color-deal:var(--tk-red-600); --color-deal-on:var(--tk-paper-50);
+  --color-partner-accent:var(--tk-ink-900);
+  --color-partner-surface:var(--tk-paper-50);
+  --color-skeleton:var(--tk-paper-200);
+  --font-display:var(--font-archivo);
+  --font-body:var(--font-archivo);
+  --font-numeric:var(--font-jetbrains);
+  --font-arabic-display:var(--font-alexandria);
+  --font-arabic-body:var(--font-alexandria);
+  --radius-card:0px; --radius-control:0px; --radius-chip:0px; --radius-sheet:0px; --radius-image:0px;
+  --border-card:1.5px;
+  --elevation-card:none;
+  --elevation-raised:var(--elevation-print);
+  --motion-ease-brand:var(--motion-ease-standard);
+  --motion-duration-brand:var(--motion-duration-instant);
+  --texture-canvas:repeating-linear-gradient(180deg,hsl(60 6% 7% / .035) 0 1px,transparent 1px 4px); /* @kind other */
+  --icon-stroke:2.25; /* @kind other */
+  --cover-treatment:none; /* @kind other */
+}
+[data-variant="ticket"][data-theme="dark"]{
+  --color-surface-canvas:#14140F;
+  --color-surface-raised:#1C1C17;
+  --color-surface-sunken:#0D0D0A;
+  --color-surface-inverse:var(--tk-paper-50);
+  --color-text-primary:var(--tk-paper-50);
+  --color-text-secondary:#A5A29A;
+  --color-text-tertiary:#7A7770;
+  --color-text-inverse:var(--tk-ink-900);
+  --color-border-subtle:#33322B;
+  --color-border-default:var(--tk-paper-50);
+  --color-border-strong:var(--tk-paper-50);
+  --color-brand-primary:var(--tk-paper-50);
+  --color-text-on-brand:var(--tk-ink-900);
+  --color-brand-tint:#2A2922;
+  --color-deal:#FF5E56; --color-deal-on:#14140F;
+  --color-rating:var(--tk-paper-50);
+  --color-time-urgent:#FF5E56; --color-time-urgent-tint:#3B1512;
+  --color-fresh:#4FBF86; --color-fresh-tint:#123023;
+  --color-skeleton:#2A2922;
+  --elevation-print:3px 3px 0 var(--tk-paper-50);
+  --elevation-raised:3px 3px 0 var(--tk-paper-50);
+}

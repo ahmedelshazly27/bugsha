@@ -1,0 +1,194 @@
+<!-- @dsCard group="Exploration" viewport="1280x2200" name="Identity + app screens" subtitle="Six vibrant identities, abstract gestural marks, each on a real browse screen" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Bugsha — identity + screens</title>
+<link rel="stylesheet" href="../styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Familjen+Grotesk:wght@400..700&family=Bricolage+Grotesque:opsz,wght@12..96,400..700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;padding:26px;background:#DEDBD6;color:#2C2822;font-family:'Archivo',sans-serif}
+.note{font-size:11.5px;line-height:17.5px;color:#4A463F;max-width:1180px;margin:0 0 22px}
+b{color:#1B1815}
+h2{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:#6B665E;margin:28px 0 12px}
+.marks{display:grid;grid-template-columns:repeat(8,1fr);gap:12px}
+.mk{background:#14120F;border-radius:10px;padding:16px 10px 13px;display:grid;justify-items:center;gap:11px}
+.mk>svg{width:54px;height:54px;color:#fff}
+.pf{display:flex;gap:8px;align-items:center}
+.pf svg{color:#fff}
+.mn{font-size:10.5px;font-weight:600;color:#F2F0EA;text-align:center;line-height:14px}
+.mi{font-family:var(--font-plex-mono);font-size:8px;letter-spacing:.04em;text-transform:uppercase;color:#8E8A82;text-align:center;line-height:12px}
+
+.rows{display:grid;gap:16px}
+.row{display:grid;grid-template-columns:1fr 300px;gap:0;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(20,14,8,.14)}
+.left{display:grid;grid-template-rows:1fr auto}
+.field{display:grid;place-items:center;min-height:250px;background-size:cover;background-position:center}
+.lock{display:flex;align-items:center;gap:.4em;color:#fff}
+.lock svg{flex:none;color:#fff}
+.wd{line-height:1;white-space:nowrap;position:relative}
+.tm{font-size:.26em;position:absolute;top:.04em;margin-inline-start:.06em;line-height:1;font-weight:500}
+.cap{padding:14px 16px 16px;display:grid;gap:6px}
+.nm{font-size:14px;font-weight:600;letter-spacing:-0.01em}
+.pov{font-size:11.5px;line-height:16px;color:#655F57;max-width:520px}
+.pair{display:flex;align-items:center;gap:6px;font-family:var(--font-plex-mono);font-size:8.5px;letter-spacing:.04em;text-transform:uppercase;color:#8C877F}
+.chip{width:13px;height:13px;border-radius:2px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.14)}
+
+/* ---- phone ---- */
+.phone{border-inline-start:1px solid #E7E4DE;padding:14px;display:grid;place-items:start center;background:#F3F1EC}
+.scr{width:272px;height:auto;border-radius:20px;overflow:hidden;box-shadow:0 6px 20px rgba(20,14,8,.18);display:grid;grid-template-rows:auto 1fr auto}
+.hd{padding:11px 12px 10px;display:grid;gap:9px}
+.hrow{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.brand{display:flex;align-items:center;gap:6px}
+.brand svg{flex:none}
+.bn{font-size:14px;font-weight:600;letter-spacing:-0.02em}
+.loc{font-size:9.5px;font-weight:500;opacity:.9}
+.srch{height:28px;border-radius:6px;display:flex;align-items:center;padding:0 9px;font-size:9.5px}
+.chips{display:flex;gap:5px}
+.cp{font-size:8.5px;font-weight:600;padding:4px 8px;border-radius:4px;white-space:nowrap}
+.body{padding:10px 12px 12px;display:grid;gap:9px}
+.sec{font-size:10px;font-weight:700;letter-spacing:-0.01em;display:flex;justify-content:space-between;align-items:baseline}
+.secn{font-family:var(--font-plex-mono);font-size:8px;font-weight:400;opacity:.7}
+.bag{border-radius:8px;overflow:hidden;border:1px solid rgba(0,0,0,.08)}
+.ph{height:64px;background-size:cover;background-position:center;position:relative}
+.left-pill{position:absolute;left:6px;top:6px;font-size:7.5px;font-weight:700;padding:3px 5px;border-radius:3px}
+.heart{position:absolute;right:6px;top:6px;width:18px;height:18px;border-radius:3px;background:rgba(255,255,255,.92);display:grid;place-items:center}
+.bb{padding:8px 9px;display:grid;gap:5px}
+.b1{display:flex;align-items:center;gap:6px}
+.av{width:18px;height:18px;border-radius:3px;display:grid;place-items:center;flex:none}
+.av svg{width:11px;height:11px;color:#fff}
+.pn{font-size:10.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mo{font-family:var(--font-plex-mono);font-size:8px;white-space:nowrap}
+.b3{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.pr{font-family:var(--font-plex-mono);font-size:11.5px;font-weight:700}
+.was{font-size:8px;text-decoration:line-through;opacity:.65}
+.cta{font-size:8.5px;font-weight:700;padding:5px 9px;border-radius:4px;white-space:nowrap}
+.tabs{display:flex;padding:7px 4px 9px;border-top:1px solid rgba(0,0,0,.08)}
+.tab{flex:1;display:grid;justify-items:center;gap:2px;font-size:7.5px;font-weight:600}
+.tab img{width:14px;height:14px}
+</style></head><body>
+
+<p class="note"><b>Marks: abstract, sharp-edged, and every one derived from the name.</b> بقشة is a square of cloth whose corners are drawn up and knotted, then untied at home — so the whole set is built from that square: the kerchief with a corner turned back, the four corners pulled to the centre, the knot held in negative space, the cloth clipped and cinched, the ب of the name cut to flat planes, the same triangle wrapped then opened, the bundle in silhouette, and cloth wound around what is inside. Straight cuts and mitred points only — no curves, no rounded corners.<br><br>
+<b>Screens:</b> every identity is shown on the same browse screen so you can judge it in use rather than as a swatch. The layout follows the <b>conventional structure of this category</b> — location header, search, filter chips, cards carrying pickup window / distance / rating / price-against-worth — which is standard marketplace practice; it is not a copy of Too Good To Go's interface, which I won't reproduce. Colour is vibrant and every field holds a white lockup at 3.3:1 or better, so white is always the second colour. Teal and eco-green stay out.</p>
+
+<h2>Marks — from بقشة: the cloth square, tied and untied</h2>
+<div class="marks" id="marks"></div>
+
+<h2>Identities in use</h2>
+<div class="rows" id="rows"></div>
+
+<script>
+const MARKS={
+ kerchief:{n:"A · Kerchief",i:"the cloth square itself, one corner turned back",
+  svg:`<path d="M24 3 45 24 24 45 3 24 24 3Z" fill="currentColor"/><path d="M13 14h22L24 25 13 14Z" fill="var(--knock,#14120F)" opacity=".42"/>`},
+ corners:{n:"B · Four corners",i:"the bugsha gesture — four corners drawn to the centre",
+  svg:`<path d="M4 4h40L24 20 4 4Z" fill="currentColor"/><path d="M44 4v40L28 24 44 4Z" fill="currentColor" opacity=".78"/><path d="M44 44H4l20-16 20 16Z" fill="currentColor"/><path d="M4 44V4l16 20-16 20Z" fill="currentColor" opacity=".78"/>`},
+ knot:{n:"C · Knot",i:"two ties crossing — the square knot in negative space",
+  svg:`<path d="M4 4h13l27 27v13H31L4 17V4Z" fill="currentColor"/><path d="M44 4v13L17 44H4V31L31 4h13Z" fill="currentColor" opacity=".6"/>`},
+ cinched:{n:"D · Cinched",i:"the bundle clipped at two corners and pulled tight",
+  svg:`<path d="M14 3h20l11 11v20L34 45H14L3 34V14L14 3Z" fill="currentColor"/><path d="M3 20h42v8H3v-8Z" fill="var(--knock,#14120F)"/>`},
+ beh:{n:"E · Beh (ب)",i:"the letter that starts بقشة, cut to flat planes",
+  svg:`<path d="M6 15h36l-8 21H14L6 15Z" fill="currentColor"/><path d="M20 40h8v8h-8z" fill="currentColor"/>`},
+ reveal:{n:"F · Reveal",i:"wrapped, then opened — the same triangle both ways",
+  svg:`<path d="M24 3 45 21H3L24 3Z" fill="currentColor"/><path d="M3 27h42L24 45 3 27Z" fill="currentColor" opacity=".58"/>`},
+ bundle:{n:"G · Bundle",i:"the tied bundle in silhouette, all straight cuts",
+  svg:`<path d="M13 21h22l8 24H5l8-24Z" fill="currentColor"/><path d="M15 19 5 5l16 12-6 2Z" fill="currentColor"/><path d="M33 19 45 6 29 17l4 2Z" fill="currentColor"/>`},
+ wind:{n:"H · Wind",i:"cloth wound around what's inside",
+  svg:`<path d="M3 3h42v9H12v9h24v6H21v6h15v9H12v-9h9v-6H3V3Z" fill="currentColor"/><path d="M27 30h9v15H15v-6h12v-9Z" fill="currentColor" opacity=".55"/>`},
+};
+document.getElementById('marks').innerHTML = Object.values(MARKS).map(m=>`<div class="mk">
+ <svg viewBox="0 0 48 48">${m.svg}</svg>
+ <div class="pf">${[24,18,14].map(s=>`<svg viewBox="0 0 48 48" width="${s}" height="${s}">${m.svg}</svg>`).join('')}</div>
+ <div class="mn">${m.n}</div><div class="mi">${m.i}</div></div>`).join('');
+
+const WD={
+ archivo:"font-family:'Archivo',sans-serif;font-weight:600;font-size:40px;letter-spacing:-0.03em",
+ caps:"font-family:'Archivo',sans-serif;font-weight:600;font-size:31px;letter-spacing:0.045em;text-transform:uppercase",
+ familjen:"font-family:'Familjen Grotesk',sans-serif;font-weight:600;font-size:41px;letter-spacing:-0.03em",
+ bricolage:"font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:40px;letter-spacing:-0.035em",
+ grotesk:"font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:40px;letter-spacing:-0.04em",
+};
+const V=[
+ {nm:"01 · Vermilion",c:"#E23E12",cr:"3.9:1",mark:"corners",wd:"archivo",tm:1,size:40,dark:0,
+  pov:"Hotter and more mineral than orange — the colour of a service hatch at closing time. Four corners drawn to the centre — the bugsha gesture itself."},
+ {nm:"02 · Magenta",c:"#D6006E",cr:"4.9:1",mark:"kerchief",wd:"caps",tm:1,size:31,dark:0,
+  pov:"The loudest of the eight and completely unclaimed in Kuwaiti F&B. Kerchief is the cloth square, one corner turned back."},
+ {nm:"03 · Plum",c:"#86198F",cr:"7.0:1",mark:"knot",wd:"archivo",tm:1,size:40,dark:0,
+  pov:"Vibrant but adult — festive without reading discount. Knot is two ties crossing, the square knot held in negative space."},
+ {nm:"04 · Violet",c:"#5B21B6",cr:"7.6:1",mark:"reveal",wd:"bricolage",tm:0,size:40,dark:0,
+  pov:"Late-evening and app-native, zero food cliché. Reveal is the same triangle wrapped and then opened."},
+ {nm:"05 · Indigo",c:"#3730A3",cr:"8.6:1",mark:"cinched",wd:"familjen",tm:1,size:41,dark:0,
+  pov:"The deepest and most credible: this is the tile a franchise director trusts. Cinched clips two corners and pulls the cloth tight."},
+ {nm:"06 · Electric Blue",c:"#1D4ED8",cr:"5.7:1",mark:"beh",wd:"archivo",tm:1,size:40,dark:0,
+  pov:"Bright, technical, product-first. Beh is the ب of بقشة cut to flat planes."},
+ {nm:"07 · Cerulean",c:"#0369A1",cr:"5.2:1",mark:"wind",wd:"familjen",tm:1,size:41,dark:0,
+  pov:"Cool and operational without touching teal. Wind is cloth wound around what is inside."},
+ {nm:"08 · Maroon",c:"#7F1D1D",cr:"8.9:1",mark:"bundle",wd:"caps",tm:1,size:31,dark:0,
+  pov:"The most premium and the most Gulf-restaurant of the set. Bundle is the tied bag in silhouette, all straight cuts."},
+ {nm:"09 · Ink + Vermilion",c:"#14120F",cr:"17.4:1",accent:"#E23E12",mark:"corners",wd:"grotesk",tm:1,size:40,dark:1,
+  pov:"Night mode as the primary surface: near-black, white lockup, vermilion carried only by the one action."},
+];
+
+const CARDS=[
+ {p:"Kuwait Bakehouse",img:"tone-bakehouse",win:"21:30–22:30",km:"1.4",r:"4.7",now:"2.000",was:"6.500",left:"2 left"},
+ {p:"Beit Beirut",img:"tone-mezze",win:"22:00–23:00",km:"2.1",r:"4.5",now:"3.000",was:"9.000",left:"5 left"},
+];
+function screen(v){
+  const ink = v.dark ? '#F5F2EC' : '#14120F';
+  const surface = v.dark ? '#1C1A16' : '#FFFFFF';
+  const canvas = v.dark ? '#100E0B' : '#FBFAF7';
+  const sub = v.dark ? 'rgba(245,242,236,.76)' : 'rgba(20,18,15,.74)';
+  const sunken = v.dark ? '#26231D' : '#F1EFEA';
+  const inv = v.dark ? 'filter:invert(1)' : '';
+  const cards = CARDS.map(c=>`<div class="bag" style="background:${surface}">
+    <div class="ph" style="background-image:url(../assets/photos/${c.img}.png)">
+      <span class="left-pill" style="background:${v.c};color:#fff">${c.left}</span>
+      <span class="heart"><img src="../assets/icons/heart.svg" width="10" height="10"></span></div>
+    <div class="bb">
+      <div class="b1"><span class="av" style="background:${v.c}"><svg viewBox="0 0 48 48">${MARKS[v.mark].svg}</svg></span>
+        <span class="pn" style="color:${ink}">${c.p}</span></div>
+      <div class="mo" style="color:${sub}">Surprise Bundle · ${c.win}</div>
+      <div class="mo" style="color:${sub}">${c.km} km · ★ ${c.r}</div>
+      <div class="b3"><span class="pr" style="color:${ink}">KD ${c.now} <span class="was">${c.was}</span></span>
+        <span class="cta" style="background:${v.c};color:#fff">Reserve</span></div>
+    </div></div>`).join('');
+  return `<div class="scr" style="background:${canvas}">
+    <div class="hd" style="background:${v.c}">
+      <div class="hrow"><span class="brand" style="color:#fff">
+        <svg viewBox="0 0 48 48" width="17" height="17" style="color:#fff">${MARKS[v.mark].svg}</svg>
+        <span class="bn">Bugsha</span></span>
+        <span class="loc" style="color:#fff">Salmiya ▾</span></div>
+      <div class="srch" style="background:rgba(255,255,255,.92);color:rgba(20,18,15,.62)">Search bakeries, cafés, co-ops</div>
+      <div class="chips">
+        <span class="cp" style="background:#fff;color:${v.c}">All</span>
+        <span class="cp" style="background:rgba(255,255,255,.22);color:#fff">Bakery</span>
+        <span class="cp" style="background:rgba(255,255,255,.22);color:#fff">Meals</span>
+        <span class="cp" style="background:rgba(255,255,255,.22);color:#fff">Grocery</span></div>
+    </div>
+    <div class="body">
+      <div class="sec" style="color:${ink}">Tonight near you<span class="secn">12 bundles</span></div>
+      ${cards}
+      <div class="sec" style="color:${ink}">Closing soon<span class="secn">&lt; 45 min</span></div>
+      <div class="bag" style="background:${sunken};border-color:transparent">
+        <div class="bb"><div class="b1"><span class="av" style="background:${v.c}"><svg viewBox="0 0 48 48">${MARKS[v.mark].svg}</svg></span>
+          <span class="pn" style="color:${ink}">Co-op Jabriya</span></div>
+          <div class="mo" style="color:${sub}">20:00–21:00 · 0.8 km · 9 left</div>
+          <div class="b3"><span class="pr" style="color:${ink}">KD 1.500 <span class="was">5.000</span></span>
+            <span class="cta" style="background:${ink};color:${canvas}">Reserve</span></div></div></div>
+    </div>
+    <div class="tabs" style="background:${surface}">
+      ${[['house','Browse'],['map','Map'],['shopping-bag','Orders'],['user','Me']].map((t,i)=>
+        `<span class="tab" style="color:${i===0?v.c:sub}"><img src="../assets/icons/${t[0]}.svg" style="${i===0?'':inv}"><span>${t[1]}</span></span>`).join('')}
+    </div></div>`;
+}
+
+document.getElementById('rows').innerHTML = V.map(v=>`<div class="row">
+  <div class="left">
+    <div class="field" style="background:${v.c}">
+      <span class="lock"><svg viewBox="0 0 48 48" width="${v.size}" height="${v.size}" style="--knock:${v.accent||v.c}">${MARKS[v.mark].svg}</svg>
+      <span class="wd" style="${WD[v.wd]}">Bugsha${v.tm?'<span class="tm">™</span>':''}</span></span>
+    </div>
+    <div class="cap"><span class="nm">${v.nm}</span><span class="pov">${v.pov}</span>
+      <span class="pair"><i class="chip" style="background:#fff"></i>#FFFFFF
+        <i class="chip" style="background:${v.c}"></i>${v.c.toUpperCase()}${v.accent?`<i class="chip" style="background:${v.accent}"></i>${v.accent}`:''}
+        · white ${v.cr} · ${MARKS[v.mark].n.replace(/^[A-H] · /,'')}</span></div>
+  </div>
+  <div class="phone">${screen(v)}</div>
+</div>`).join('');
+</script>
+</body></html>

@@ -1,0 +1,35 @@
+<!-- @dsCard group="Components" viewport="700x380" name="Partner" subtitle="Orders board, listing step, payout, KPI tiles, compliance ledger" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{padding:16px}</style></head><body><div id="root"></div>
+<script type="text/babel">
+const { OrderRow, PayoutCard, LedgerRow, PartnerStat, ListingStep, Stepper, Button } = window.SurplusKWDesignSystem_97ec90;
+function Demo(){const[q,setQ]=React.useState(6);return(
+<div style={{display:"grid",gap:14}}>
+  <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10}}>
+    <PartnerStat label="Bags live" value="6" sub="listed 21:04" icon="package"/>
+    <PartnerStat label="Reserved" value="4" sub="2 waiting" icon="shopping-bag" tone="fresh"/>
+    <PartnerStat label="Window closes" value="22:30" sub="in 46 min" icon="clock" tone="urgent"/>
+    <PartnerStat label="Tonight" value="KD 24.000" sub="net of fee" icon="banknote"/>
+  </div>
+  <div style={{border:"1px solid var(--color-border-subtle)",borderRadius:"var(--radius-card)",overflow:"hidden"}}>
+    <OrderRow code="KW-4821" customer="Noura A." pickupBy="22:30" status="waiting"/>
+    <OrderRow code="KW-4822" customer="Rahul S." quantity={2} pickupBy="22:30" status="late"/>
+    <OrderRow code="KW-4819" customer="Mishari K." pickupBy="22:00" status="collected"/>
+  </div>
+  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,alignItems:"start"}}>
+    <ListingStep index={1} total={3} title="How many bags?" hint="Last night: 6">
+      <div style={{display:"flex",gap:10,alignItems:"center"}}><Stepper value={q} max={20} onChange={setQ}/><Button size="md">Same as last night</Button></div>
+    </ListingStep>
+    <PayoutCard amount={184.5} period="This week" bags={92} nextDate="Sun 9 Aug"/>
+  </div>
+  <div style={{border:"1px solid var(--color-border-subtle)",borderRadius:"var(--radius-card)",overflow:"hidden"}}>
+    <LedgerRow orderId="KW-4821" listedAt="21:04" windowEnd="22:30" collectedAt="22:11" attested/>
+    <LedgerRow orderId="KW-4822" listedAt="21:04" windowEnd="22:30" collectedAt="" attested={false}/>
+  </div>
+</div>);}
+ReactDOM.createRoot(document.getElementById("root")).render(<Demo/>);
+</script></body></html>

@@ -1,0 +1,25 @@
+<!-- @dsCard group="Brand" viewport="700x230" name="Logo — mark & wordmark" subtitle="Bugsha lockups: horizontal, stacked, mark-only, Arabic, on violet" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{padding:20px;background:var(--color-surface-canvas)}
+.row{display:flex;gap:34px;align-items:center;flex-wrap:wrap}
+.on{background:var(--color-brand-primary);color:var(--color-text-inverse);padding:16px 20px;border-radius:var(--radius-card)}
+.cap{font-family:var(--font-plex-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-text-tertiary);margin-top:10px}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const { Logo } = window.SurplusKWDesignSystem_97ec90;
+ReactDOM.createRoot(document.getElementById("root")).render(
+<div>
+  <div className="row">
+    <Logo size={40} tm/>
+    <Logo lang="ar" size={40}/>
+    <Logo lockup="stacked" size={40}/>
+    <span className="on"><Logo size={30} color="currentColor"/></span>
+    <span style={{display:"flex",gap:14,alignItems:"center"}}><Logo lockup="mark" size={44}/><Logo lockup="mark" size={28}/><Logo lockup="mark" size={20}/></span>
+  </div>
+  <p className="cap">One colour only · clear space = knot height · minimum 20px mark-only, 28px with wordmark</p>
+</div>);
+</script></body></html>

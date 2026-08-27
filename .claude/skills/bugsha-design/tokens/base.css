@@ -1,0 +1,19 @@
+/* Minimal global base. Everything else lives in components. */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--color-surface-canvas);color:var(--color-text-primary);
+  font-family:var(--font-body);font-size:var(--text-body-size);line-height:var(--text-body-line);
+  font-weight:var(--weight-regular);text-wrap:pretty;-webkit-font-smoothing:antialiased}
+[lang="ar"],[dir="rtl"]{font-family:var(--font-arabic-body);line-height:calc(var(--text-body-line) * var(--arabic-line-scale))}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:var(--weight-bold);letter-spacing:var(--tracking-tight);margin:0}
+[dir="rtl"] h1,[dir="rtl"] h2,[dir="rtl"] h3,[dir="rtl"] h4{font-family:var(--font-arabic-display);letter-spacing:0}
+a{color:var(--color-text-link);text-decoration-thickness:1px;text-underline-offset:2px}
+a:hover{color:var(--color-brand-hover);text-decoration:underline}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:var(--focus-ring-width) solid var(--color-border-focus);outline-offset:var(--focus-ring-offset);border-radius:var(--radius-xs)}
+.ds-numeric{font-family:var(--font-numeric),var(--font-arabic-body),ui-monospace,monospace;font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+/* RTL mirroring: directional glyphs flip, time/media/logos never do. */
+[dir="rtl"] .ds-icon-directional{transform:scaleX(-1)}
+[dir="rtl"] .ds-icon-no-mirror{transform:none}
+@keyframes ds-pulse{0%,100%{opacity:1}50%{opacity:.55}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}

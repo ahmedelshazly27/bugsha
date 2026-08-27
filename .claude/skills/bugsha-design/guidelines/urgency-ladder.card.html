@@ -1,0 +1,13 @@
+<!-- @dsCard group="Colors" viewport="700x140" name="Urgency ladder" subtitle="Tone escalates on clock time only — never on inventory, never red on food" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../styles.css">
+<style>body{margin:0;padding:16px;font-family:var(--font-body);background:var(--color-surface-canvas);color:var(--color-text-primary)}
+.grid{display:grid;gap:8px}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sw{display:grid;gap:6px;justify-items:start}.chip{width:100%;height:44px;border-radius:8px;border:1px solid var(--color-border-subtle)}
+.lbl{font-size:11px;line-height:14px;color:var(--color-text-secondary);font-family:var(--font-plex-mono)}
+.val{font-size:10px;color:var(--color-text-tertiary);font-family:var(--font-plex-mono)}
+.pane{padding:14px;border-radius:12px}</style></head><body><div class="row" style="gap:14px">
+ <span style="display:inline-flex;align-items:center;gap:6px;background:var(--color-surface-sunken);color:var(--color-text-secondary);padding:6px 12px;border-radius:var(--radius-chip);font-size:12px;font-weight:600">2h 40m left</span>
+ <span style="display:inline-flex;align-items:center;gap:6px;background:var(--color-time-tint);color:var(--color-time);padding:6px 12px;border-radius:var(--radius-chip);font-size:12px;font-weight:600">42 min left</span>
+ <span style="display:inline-flex;align-items:center;gap:6px;background:var(--color-time-urgent-tint);color:var(--color-time-urgent);padding:6px 12px;border-radius:var(--radius-chip);font-size:12px;font-weight:600">11 min left</span>
+ <span style="display:inline-flex;align-items:center;gap:6px;background:var(--color-fresh-tint);color:var(--color-fresh);padding:6px 12px;border-radius:var(--radius-chip);font-size:12px;font-weight:600">Reserved · collect by 22:30</span></div>
+ <p class="lbl" style="margin-top:12px">&gt;60 min neutral · 15–60 min time · &lt;15 min urgent + 2s pulse · reserved switches to fresh</p></body></html>

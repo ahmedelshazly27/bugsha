@@ -1,0 +1,85 @@
+<!-- @dsCard group="Exploration" viewport="1280x1180" name="Colour directions" subtitle="Eight palettes, each on the same bag card — none of them eco-green" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Bugsha — colour exploration</title>
+<link rel="stylesheet" href="../styles.css">
+<style>
+body{margin:0;padding:28px;background:#E9E6E1;font-family:var(--font-plex-sans)}
+h2{font-family:var(--font-plex-sans);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#6B665E;margin:0 0 16px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.opt{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(20,14,8,.10);display:grid;grid-template-rows:118px auto 1fr;align-content:start}
+.hd{padding:14px 16px 12px}
+.nm{font-size:15px;font-weight:700;letter-spacing:-0.01em}
+.pov{font-size:11.5px;line-height:16px;color:#6B665E;margin-top:5px}
+.sw{display:flex;height:30px}
+.sw i{flex:1;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.demo{padding:14px;display:grid;gap:10px}
+.card{border-radius:12px;overflow:hidden}
+.ph{height:68px}
+.cbody{padding:9px 11px;display:grid;gap:6px}
+.r1{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.pn{font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill{font-size:9.5px;font-weight:700;padding:3px 7px;border-radius:99px;white-space:nowrap}
+.meta{font-family:var(--font-plex-mono);font-size:9.5px;white-space:nowrap}
+.r2{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pr{font-family:var(--font-plex-mono);font-size:15px;font-weight:700}
+.cta{font-size:10.5px;font-weight:700;padding:7px 14px;border-radius:99px;white-space:nowrap;flex:none}
+.tag{font-family:var(--font-plex-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;opacity:.75}
+.note{font-size:11.5px;line-height:17px;color:#575249;max-width:1180px;margin:0 0 22px}
+b{color:#2C2822}
+</style></head><body>
+
+<p class="note"><b>Two colours, three at the absolute most</b> — the way Too Good To Go (deep teal + warm off-white), Talabat, Deliveroo and most F&amp;B brands actually work: one surface, one ink, and at most one accent. Teal and eco-green are <b>off the table</b> — they read as a category clone and, in Kuwait, as NGO rather than F&amp;B. The swatch strip under each name is the <b>entire</b> palette: nothing else is allowed in, and status (fresh, time, urgent, error) is carried by tint depth, weight and icon — never by a new hue.</p>
+
+<h2>Colour directions</h2>
+<div class="grid" id="grid"></div>
+
+<script>
+const OPTS=[
+ {nm:"01 · Saffron & Ink",pov:"Two colours: charcoal ink on off-white. Saffron is the only accent — appetite, not recycling.",
+  surface:"#FFFDF8",ink:"#1B1815",accent:"#F5A524",support:"#1B1815",sw:["#FFFDF8","#F5A524","#1B1815"],photo:"tone-bakehouse"},
+ {nm:"02 · Pomegranate",pov:"Blush paper, near-black ink, one pomegranate accent. Festive and premium — a gift, not a discount bin.",
+  surface:"#FDF4F2",ink:"#2A1418",accent:"#B3122F",support:"#2A1418",sw:["#FDF4F2","#B3122F","#2A1418"],photo:"tone-mezze"},
+ {nm:"03 · Date & Cream",pov:"Cream and date brown only — the accent IS the ink, one step warmer. The quietest system here.",
+  surface:"#F8F1E6",ink:"#3C2415",accent:"#8A5B2B",support:"#3C2415",sw:["#F8F1E6","#8A5B2B","#3C2415"],photo:"tone-bread"},
+ {nm:"04 · Gulf Blue & Sun",pov:"Deep gulf blue on cool white, sun yellow as the single accent. Maximum glare legibility at a drive-up lane.",
+  surface:"#F5F7F9",ink:"#0E2C4B",accent:"#FFC53D",support:"#0E2C4B",sw:["#F5F7F9","#FFC53D","#0E2C4B"],photo:"tone-coop"},
+ {nm:"05 · Rose Clay",pov:"Bone and near-black, one dusty clay accent. Contemporary Kuwaiti interiors — grown-up and quiet.",
+  surface:"#F7F2EE",ink:"#33262A",accent:"#A94F3E",support:"#33262A",sw:["#F7F2EE","#A94F3E","#33262A"],photo:"tone-cafe"},
+ {nm:"06 · Electric Citrus",pov:"Near-black and bone, one acid citrus accent. Night-market energy, built to be screenshotted at 9pm.",
+  surface:"#0E0F0B",ink:"#F2F5E8",accent:"#C8F542",support:"#C8F542",sw:["#0E0F0B","#C8F542","#F2F5E8"],photo:"tone-night",dark:1},
+ {nm:"07 · Ultramarine",pov:"Paper and ultramarine — two colours, no third. Reads design-literate and tech, never charity.",
+  surface:"#F2F1EC",ink:"#12142B",accent:"#2438D9",support:"#12142B",sw:["#F2F1EC","#2438D9","#12142B"],photo:"tone-coop"},
+ {nm:"08 · Ink & Spot Red",pov:"Newsprint and ink with one spot red. Print-shop honesty: the numbers do the selling.",
+  surface:"#F0EEE7",ink:"#111110",accent:"#C8241D",support:"#111110",sw:["#F0EEE7","#C8241D","#111110"],photo:null,flat:1},
+];
+document.getElementById('grid').innerHTML = OPTS.map(o=>{
+  const lum = hex => { const [r,g,b] = [1,3,5].map(i => parseInt(hex.substr(i,2),16)/255)
+      .map(c => c <= .03928 ? c/12.92 : Math.pow((c+.055)/1.055, 2.4));
+    return .2126*r + .7152*g + .0722*b; };
+  const ratio = (a,b) => { const [x,y] = [lum(a), lum(b)].sort((p,q)=>q-p); return (x+.05)/(y+.05); };
+  const dark = o.dark ? o.surface : o.ink;          // the dark end of THIS system
+  const light = o.dark ? o.ink : o.surface;         // the light end of THIS system
+  const onAccent = ratio(o.accent, dark) >= ratio(o.accent, light) ? dark : light;
+  const cardBg = o.dark ? '#1A1C15' : '#fff';
+  const sub = o.dark ? 'rgba(242,245,232,.62)' : 'rgba(0,0,0,.55)';
+  const pillBg = o.dark ? 'rgba(242,245,232,.10)' : 'rgba(0,0,0,.055)';
+  const cover = o.photo
+    ? `<div class="ph" style="background:url(../assets/photos/${o.photo}.png) center/cover"></div>`
+    : `<div class="ph" style="background:${o.support}1a;display:grid;place-items:center"><span class="tag" style="color:${o.ink}">bakery</span></div>`;
+  return `<div class="opt">
+   <div class="hd"><div class="nm">${o.nm}</div><div class="pov">${o.pov}</div></div>
+   <div class="sw">${o.sw.map(c=>`<i style="background:${c}"></i>`).join('')}</div>
+   <div class="demo" style="background:${o.surface}">
+     <div class="card" style="background:${cardBg};border:${o.flat?`1.5px solid ${o.ink}`:'1px solid rgba(0,0,0,.07)'};border-radius:${o.flat?'0':'12px'};box-shadow:${o.flat?'none':'0 1px 4px rgba(20,14,8,.09)'}">
+       ${cover}
+       <div class="cbody">
+         <div class="r1"><span class="pn" style="color:${o.ink}">Kuwait Bakehouse</span>
+           <span class="pill" style="background:${pillBg};color:${o.ink}">42 min left</span></div>
+         <div class="meta" style="color:${sub}">21:30–22:30 · 1.4 km · 2 left</div>
+         <div class="r2"><span class="pr" style="color:${o.ink}">KD 2.000 <span style="font-size:10px;text-decoration:line-through;color:${sub}">6.500</span></span>
+           <span class="cta" style="background:${o.accent};color:${onAccent}">Take it</span></div>
+       </div>
+     </div>
+   </div></div>`;
+}).join('');
+</script>
+</body></html>

@@ -1,0 +1,65 @@
+<!-- @dsCard group="Exploration" viewport="1280x1000" name="Marks & wordmarks" subtitle="Twelve mark concepts and eight wordmark pairings, EN + AR" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Bugsha — mark & wordmark exploration</title>
+<link rel="stylesheet" href="../styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Serif+Display:ital@0;1&family=Familjen+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;padding:28px;background:#E9E6E1;color:#2C2822;font-family:var(--font-plex-sans)}
+h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#6B665E;margin:0 0 4px}
+.sub{font-size:11.5px;line-height:17px;color:#575249;max-width:1180px;margin:0 0 18px}
+.marks{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:34px}
+.m{background:#FFFDF8;border-radius:14px;padding:16px 14px 12px;display:grid;justify-items:center;gap:10px;box-shadow:0 1px 3px rgba(20,14,8,.09)}
+.m svg{width:72px;height:72px;color:#1B1815}
+.mn{font-size:11px;font-weight:700;text-align:center;line-height:15px}
+.md{font-family:var(--font-plex-mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:#8A857C;text-align:center}
+.small{display:flex;gap:8px;align-items:flex-end;justify-content:center}
+.small svg{color:#1B1815}
+.wm{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.w{background:#FFFDF8;border-radius:14px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:20px;box-shadow:0 1px 3px rgba(20,14,8,.09)}
+.wl{display:grid;gap:8px}
+.wt{font-size:10px;font-family:var(--font-plex-mono);letter-spacing:.08em;text-transform:uppercase;color:#8A857C}
+.en{line-height:1;color:#1B1815}
+.ar{line-height:1.1;color:#1B1815;direction:rtl}
+</style></head><body>
+
+<h2>Mark concepts</h2>
+<p class="sub">All monochrome, all drawn on the same 48-grid, all shown at 72px and again at 28 / 20 / 16px so you can judge them at favicon and tab-bar size. Concepts 1–4 are the bundle read literally; 5–8 abstract the wrap or the knot; 9–12 push toward monogram, seal and pickup-window ideas.</p>
+<div class="marks" id="marks"></div>
+
+<h2>Wordmark pairings</h2>
+<p class="sub">Each row sets <b>Bugsha</b> and <b>بقشة</b> at matched optical weight. The Arabic is not a fallback — the pairing is chosen so both scripts share the same rhythm and stroke contrast.</p>
+<div class="wm" id="wm"></div>
+
+<script>
+const S = 'stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"';
+const MARKS=[
+ {n:"01 Tied bundle",d:"literal · current",svg:`<g ${S} stroke-width="3.2"><path d="M16.2 21C11.2 26.6 9.4 33 12.4 38c2.7 4.4 20.5 4.4 23.2 0 3-5 1.2-11.4-3.8-17"/><path d="M21.4 22c-1.2 5.4-1.2 10.8 0 16.2"/><path d="M28.4 22c1.1 5.4 1.1 10.8 0 16.2"/><path d="M15 21h18"/><path d="M19.2 17.4c-2.6-2.4-5.8-4-9.4-4.6"/><path d="M29 17.2c4-3.4 8.8-5.6 14-6.4"/><path d="M19.6 12.8c1.6 2.8 3.2 5.2 4.8 7.4"/><path d="M31.2 11c-2.2 3.4-4.6 6.6-7.2 9.4"/></g>`},
+ {n:"03 Folded cloth",d:"square with corner folds",svg:`<g ${S} stroke-width="3.2"><rect x="9" y="9" width="30" height="30" rx="5"/><path d="M9 20c6.5 0 11-4.4 11-11M39 28c-6.5 0-11 4.4-11 11"/></g>`},
+ {n:"04 Cinched circle",d:"waisted · tied at the middle",svg:`<g ${S} stroke-width="3.2"><path d="M20 24c-7 1.6-11 5-11 8.6C9 37.2 15.7 41 24 41s15-3.8 15-8.4c0-3.6-4-7-11-8.6"/><path d="M28 24c7-1.6 11-5 11-8.6C39 10.8 32.3 7 24 7S9 10.8 9 15.4c0 3.6 4 7 11 8.6"/><path d="M18 24h12"/></g>`},
+ {n:"05 The knot",d:"abstract · over-and-under",svg:`<g ${S} stroke-width="6"><path d="M11 14c6 4 20 16 26 20"/><path d="M11 34c3-2 6-4 8.6-5.6"/><path d="M28.6 19.4C31.2 17.8 34 16 37 14"/></g>`},
+ {n:"06 Wrap brackets",d:"abstract · the container",svg:`<g ${S} stroke-width="3.4"><path d="M17 8c-7 4.4-11 9.6-11 16s4 11.6 11 16"/><path d="M31 8c7 4.4 11 9.6 11 16s-4 11.6-11 16"/><circle cx="24" cy="24" r="5" fill="currentColor" stroke="none"/></g>`},
+ {n:"07 Reveal",d:"abstract · opening upward",svg:`<g ${S} stroke-width="3.4"><path d="M10 40c0-8 6.3-14 14-14s14 6 14 14"/><path d="M14 22 24 8l10 14"/><path d="M24 8v18"/></g>`},
+ {n:"08 Gathered lines",d:"abstract · cloth pinched",svg:`<g ${S} stroke-width="3.2"><path d="M10 10c0 8 4.6 11 4.6 14S10 30 10 38"/><path d="M24 8v32"/><path d="M38 10c0 8-4.6 11-4.6 14S38 30 38 38"/></g>`},
+ {n:"09 B monogram",d:"monogram · fold geometry",svg:`<g ${S} stroke-width="3.4"><path d="M15 9v30"/><path d="M15 9h9a7.5 7.5 0 0 1 0 15h-9"/><path d="M15 24h11a7.5 7.5 0 0 1 0 15H15"/></g>`},
+ {n:"11 Window",d:"pickup window · time-forward",svg:`<g ${S} stroke-width="3.2"><circle cx="24" cy="24" r="15"/><path d="M24 13v11l8 5"/><path d="M24 39a15 15 0 0 0 15-15" stroke-width="5"/></g>`},
+ {n:"12 Bundle + bag",d:"hybrid · retail-legible",svg:`<g ${S} stroke-width="3.2"><path d="M12 18h24l-2.4 19.4c-.3 2.1-2 3.6-4.1 3.6H18.5c-2.1 0-3.8-1.5-4.1-3.6L12 18Z"/><path d="M18 18c0-5.5 2.7-9 6-9s6 3.5 6 9"/><path d="M18 26h12"/></g>`},
+];
+document.getElementById('marks').innerHTML = MARKS.map(m=>`<div class="m">
+  <svg viewBox="0 0 48 48">${m.svg}</svg>
+  <div class="small">${[28,20,16].map(s=>`<svg viewBox="0 0 48 48" width="${s}" height="${s}">${m.svg}</svg>`).join('')}</div>
+  <div class="mn">${m.n}</div><div class="md">${m.d}</div></div>`).join('');
+
+const WORDS=[
+ {t:"A · Instrument Serif + Amiri",en:'font-family:'Instrument Serif',serif;font-size:56px;letter-spacing:-0.015em',ar:'font-family:'Amiri',serif;font-size:50px'},
+ {t:"B · Space Grotesk + Readex Pro",en:'font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:46px;letter-spacing:-0.035em',ar:'font-family:'Readex Pro',sans-serif;font-weight:600;font-size:40px'},
+ {t:"C · Archivo Black caps + Alexandria",en:'font-family:'Archivo',sans-serif;font-weight:800;font-size:38px;letter-spacing:-0.02em;text-transform:uppercase',ar:'font-family:'Alexandria',sans-serif;font-weight:700;font-size:36px'},
+ {t:"D · DM Serif Display + Amiri",en:'font-family:'DM Serif Display',serif;font-size:52px;letter-spacing:-0.01em',ar:'font-family:'Amiri',serif;font-weight:700;font-size:48px'},
+ {t:"E · Bricolage Grotesque + Tajawal",en:'font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:46px;letter-spacing:-0.03em',ar:'font-family:'Tajawal',sans-serif;font-weight:700;font-size:42px'},
+ {t:"F · Plex Sans tracked caps + Plex Arabic",en:'font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:32px;letter-spacing:.16em;text-transform:uppercase',ar:'font-family:'IBM Plex Sans Arabic',sans-serif;font-weight:600;font-size:34px'},
+ {t:"G · Instrument Serif italic + Amiri italic",en:'font-family:'Instrument Serif',serif;font-style:italic;font-size:56px;letter-spacing:-0.01em',ar:'font-family:'Amiri',serif;font-style:italic;font-size:50px'},
+ {t:"H · Familjen Grotesk + Alexandria light",en:'font-family:'Familjen Grotesk',sans-serif;font-weight:600;font-size:46px;letter-spacing:-0.025em',ar:'font-family:'Alexandria',sans-serif;font-weight:300;font-size:40px'},
+];
+document.getElementById('wm').innerHTML = WORDS.map(w=>`<div class="w">
+  <span class="wl"><span class="wt">${w.t}</span><span class="en" style="${w.en}">Bugsha</span></span>
+  <span class="ar" style="${w.ar}">بقشة</span></div>`).join('');
+</script>
+</body></html>

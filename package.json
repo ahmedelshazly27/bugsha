@@ -1,0 +1,10 @@
+{
+  "name": "bugsha-waitlist",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Waitlist capture and transactional emails for the Bugsha launch site.",
+  "scripts": {
+    "preview:emails": "node scripts/preview-emails.mjs"
+  }
+}
