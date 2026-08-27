@@ -10,7 +10,7 @@ import { brand, esc, layout } from '../_shared/templates/brand.js';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const SITE_URL = Deno.env.get('WAITLIST_SITE_URL') ?? 'https://bugsha.com';
+const SITE_URL = Deno.env.get('WAITLIST_SITE_URL') ?? 'https://bugsha.app';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 

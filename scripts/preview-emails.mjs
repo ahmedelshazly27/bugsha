@@ -15,7 +15,7 @@ const outDir = join(root, 'emails', 'preview');
 const SAMPLE = {
   email: 'nour@example.com',
   area: 'Kuwait',
-  siteUrl: 'https://bugsha.com',
+  siteUrl: 'https://bugsha.app',
   unsubscribeUrl: 'https://example.supabase.co/functions/v1/waitlist-unsubscribe?token=sample',
 };
 
@@ -28,7 +28,7 @@ const emails = [
       email: SAMPLE.email,
       area: SAMPLE.area,
       source: 'landing-page',
-      referrer: 'https://bugsha.com/',
+      referrer: 'https://bugsha.app/',
       userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) Safari/605.1.15',
       total: 128,
       dashboardUrl: 'https://supabase.com/dashboard/project/example/editor',

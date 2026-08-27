@@ -90,9 +90,9 @@ Applied to the **Bugsha** project (`qrmyhruvnqmjwxcnkocj`) in the
 | Piece | State |
 | --- | --- |
 | `public.waitlist` + `waitlist_position()` | applied (4 migrations) |
-| `waitlist-signup` | deployed, v2, `verify_jwt: false` |
-| `waitlist-unsubscribe` | deployed, v2, `verify_jwt: false` |
-| Secrets (`RESEND_API_KEY`, …) | **not set** — see below |
+| `waitlist-signup` | deployed, v4, `verify_jwt: false` |
+| `waitlist-unsubscribe` | deployed, v4, `verify_jwt: false` |
+| Secrets (`RESEND_API_KEY`, …) | set — sending verified against `delivered@resend.dev` |
 | Landing page wiring | **not done** — see below |
 
 Endpoint: `https://qrmyhruvnqmjwxcnkocj.supabase.co/functions/v1/waitlist-signup`
@@ -103,19 +103,7 @@ an unguessable token on unsubscribe).
 
 ### Still to do
 
-**1. Set the email secrets.** Until `RESEND_API_KEY` is set, signups are stored
-correctly and both emails are skipped with a logged warning — the endpoint still
-returns `200`. Verify a sending domain in Resend, then:
-
-```bash
-cp .env.example .env    # fill in RESEND_API_KEY, WAITLIST_FROM_EMAIL, WAITLIST_ADMIN_EMAIL
-supabase link --project-ref qrmyhruvnqmjwxcnkocj
-supabase secrets set --env-file .env
-```
-
-Or paste them into **Project Settings → Edge Functions → Secrets** in the dashboard.
-
-**2. Point the landing page at the endpoint.** The shipped waitlist panel
+**1. Point the landing page at the endpoint.** The shipped waitlist panel
 (`DownloadSection` in `ui_kits/marketing/site-ui.jsx`) is a stub — its submit
 handler flips local state and throws the address away:
 
@@ -134,8 +122,13 @@ original function, and set the endpoint before the bundle runs:
 If you'd rather not touch the bundle at all, `web/waitlist.js` attaches to any
 `form.waitlist-form` in the capture phase and does the same job.
 
-**3. Tighten CORS.** `WAITLIST_ALLOWED_ORIGINS` is unset, so any origin may post.
+**2. Tighten CORS.** `WAITLIST_ALLOWED_ORIGINS` is unset, so any origin may post.
 Set it to the real domains once they are final.
+
+**3. Check `bugsha.app` actually serves the site.** Emails now link to
+`https://bugsha.app` (the `WAITLIST_SITE_URL` default), but that domain is not
+attached to the `bugsha-launch` Vercel project — it only has its two `vercel.app`
+hostnames. Until it is, the "See how Bugsha works" button points nowhere.
 
 ## Reproducing the database from scratch
 

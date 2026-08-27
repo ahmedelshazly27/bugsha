@@ -21,7 +21,7 @@ import { adminNotifyEmail } from '../_shared/templates/admin-notify.js';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const SITE_URL = Deno.env.get('WAITLIST_SITE_URL') ?? 'https://bugsha.com';
+const SITE_URL = Deno.env.get('WAITLIST_SITE_URL') ?? 'https://bugsha.app';
 const FUNCTIONS_URL = `${SUPABASE_URL}/functions/v1`;
 const PROJECT_REF = SUPABASE_URL.replace(/^https:\/\//, '').split('.')[0];
 const DASHBOARD_URL = `https://supabase.com/dashboard/project/${PROJECT_REF}/editor`;

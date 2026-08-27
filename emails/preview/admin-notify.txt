@@ -5,7 +5,7 @@ New signup: nour@example.com
 
 Where: Kuwait
 Source: landing-page
-Referrer: https://bugsha.com/
+Referrer: https://bugsha.app/
 User agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) Safari/605.1.15
 
 Waitlist table: https://supabase.com/dashboard/project/example/editor

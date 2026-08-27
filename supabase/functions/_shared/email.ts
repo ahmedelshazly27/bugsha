@@ -17,7 +17,7 @@ const RESEND_ENDPOINT = 'https://api.resend.com/emails';
 export function emailConfig() {
   return {
     apiKey: Deno.env.get('RESEND_API_KEY') ?? '',
-    from: Deno.env.get('WAITLIST_FROM_EMAIL') ?? 'Bugsha <hello@bugsha.com>',
+    from: Deno.env.get('WAITLIST_FROM_EMAIL') ?? 'Bugsha <hello@bugsha.app>',
     admin: Deno.env.get('WAITLIST_ADMIN_EMAIL') ?? '',
     replyTo: Deno.env.get('WAITLIST_REPLY_TO') ?? '',
   };

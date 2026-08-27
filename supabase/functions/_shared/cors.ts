@@ -1,7 +1,7 @@
 // CORS for the public waitlist endpoints.
 //
 // WAITLIST_ALLOWED_ORIGINS is a comma-separated allowlist, e.g.
-//   https://bugsha.com,https://www.bugsha.com,https://bugsha-launch.vercel.app
+//   https://bugsha.app,https://www.bugsha.app,https://bugsha-launch.vercel.app
 // Unset (or "*") allows any origin, which is fine for a public signup form but
 // worth tightening once the production domain is final.
 
