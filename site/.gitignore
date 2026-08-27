@@ -43,3 +43,6 @@ next-env.d.ts
 
 # local build artefacts
 tsconfig.tsbuildinfo
+
+# static export output
+out/
