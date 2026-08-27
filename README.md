@@ -17,6 +17,7 @@ supabase/
     _shared/templates/admin-notify.js  internal new-signup ping
     waitlist-signup/             POST endpoint behind the form
     waitlist-unsubscribe/        one-click opt-out from the email footer
+site/                            the Next.js website source (no waitlist — see below)
 web/
   DownloadSection.jsx            drop-in replacement for the site's waitlist panel
   waitlist.js                    vanilla alternative, no rebuild required
@@ -39,9 +40,22 @@ The two rules it enforces that this codebase had to obey:
   (`assets/mark.svg`), one colour, the fold a lighter plane rather than a cut-out.
   The wordmark is Archivo 600.
 
-One thing to know: the upload also contained `uploads/Bugsha-Website-Repo-v41/`
-(the Next.js site source) and some personal photos. Those were **not** committed —
-say the word and the site source can be added properly.
+## `site/` — the Next.js source
+
+`site/` is `Bugsha-Website-Repo-v41`, the Next.js website source, kept in its own
+directory so it does not collide with the waitlist tooling at the root.
+
+**It is not what is deployed at `bugsha-launch`, and it has no waitlist.** Its
+`DownloadSection` (`site/app/components/SiteUI.tsx`) is the older app-store panel
+behind `id="download"`; the string "waitlist" does not appear anywhere in it. The
+live pre-launch site is the marketing recreation in
+`.claude/skills/bugsha-design/ui_kits/marketing/`, which is where the waitlist panel
+and `site.css` actually live — and that is what `web/DownloadSection.jsx` targets.
+
+Porting the waitlist into this Next.js source is a separate job; ask if you want it.
+
+The personal photos that shipped alongside the source in the upload were not
+committed.
 
 ## Data model
 
