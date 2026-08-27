@@ -12,11 +12,11 @@ export default function ImpactPage() {
     <SiteHeader /><MotionProvider />
     <main className="interior-page">
       <section className="impact-hero-page">
-        <div data-reveal><span className="eyebrow light">OUR IMPACT</span><h1>Good food, twice over.</h1><p>A better-value dinner for someone nearby and a little less waste for Kuwait—without asking either side to compromise.</p></div>
-        <div className="impact-hero-number" data-reveal="scale"><strong>1,284</strong><span>meals rescued so far</span><img src="/assets/bag-item-croissant.webp" alt="" /><img src="/assets/bag-item-flatbread.webp" alt="" /></div>
+        <div data-reveal><span className="eyebrow light">OUR IMPACT</span><h1>Good food, twice over.</h1><p>A better-value dinner for someone nearby and a little less waste in Kuwait and Egypt—without asking either side to compromise.</p></div>
+        <div className="impact-hero-number" data-reveal="scale"><strong>~2</strong><span>meals rescued in every Bugsha</span><img src="/assets/bag-item-croissant.webp" alt="" /><img src="/assets/bag-item-flatbread.webp" alt="" /></div>
       </section>
 
-      <section className="impact-ledger"><div className="section-intro" data-reveal><span className="eyebrow">MEASURED, NOT VAGUE</span><h2>One pickup at a time.</h2></div><div className="impact-ledger-grid"><article data-reveal><strong>642 kg</strong><span>food kept from landfill</span></article><article data-reveal><strong>1,640 kg</strong><span>estimated CO₂e avoided</span></article><article data-reveal><strong>68%</strong><span>average customer saving</span></article><article data-reveal><strong>8</strong><span>Kuwait areas live</span></article></div></section>
+      <section className="impact-ledger"><div className="section-intro" data-reveal><span className="eyebrow">MEASURED, NOT VAGUE</span><h2>One pickup at a time.</h2><p>We have not opened yet. These are the numbers a single Bugsha is designed to produce.</p></div><div className="impact-ledger-grid"><article data-reveal><strong>~0.5 kg</strong><span>good food kept in the chain, per Bugsha</span></article><article data-reveal><strong>~1.3 kg</strong><span>estimated CO₂e avoided, per Bugsha</span></article><article data-reveal><strong>~65%</strong><span>below the counter price</span></article><article data-reveal><strong>2 markets</strong><span>Kuwait and Egypt at launch</span></article></div></section>
 
       <section className="impact-stories">
         <figure className="story-bakery" data-reveal="scale" data-scroll-media="44"><img src="/assets/bugsha-impact-kitchen.webp" alt="A bakery team packing fresh food for collection at closing time" loading="lazy" decoding="async" /><figcaption><span>01</span>It begins with a kitchen that made more than today needed.</figcaption></figure>

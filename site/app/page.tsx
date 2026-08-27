@@ -261,23 +261,19 @@ export default function Home() {
       <main>
         <section className="home-hero" id="top">
           <div className="home-hero-copy" data-reveal>
-            <span className="eyebrow"><i className="live-dot" />KUWAIT · PICKUP TONIGHT</span>
+            <span className="eyebrow"><i className="live-dot" />LAUNCHING IN KUWAIT &amp; EGYPT</span>
             <h1>Tonight’s best food is already made.</h1>
-            <p>Discover surprise bundles from Kuwait’s bakeries, cafés and co-ops—freshly packed at closing and worth around three times what you pay.</p>
-            <div className="hero-actions"><a className="button button-primary" href="#waitlist">Join the waitlist <Arrow /></a><Link className="text-link" href="/partners">For businesses <Arrow /></Link></div>
-            <div className="hero-proof"><span><strong>2.400 KD</strong><small>average Bugsha</small></span><span><strong>3×</strong><small>typical value</small></span><span><strong>Pickup only</strong><small>inside the window</small></span></div>
+            <p>Bugsha is opening in Kuwait and Egypt: surprise bundles from local bakeries, cafés and co-ops, freshly packed at closing and worth around three times what you pay. Join the waitlist and collect from the first night.</p>
+            <div className="hero-actions"><a className="button button-primary" href="#waitlist">Join the waitlist <Arrow /></a><Link className="text-link" href="/partners">List your kitchen <Arrow /></Link></div>
+            <div className="hero-proof"><span><strong>~⅓ price</strong><small>of the counter</small></span><span><strong>3×</strong><small>the value inside</small></span><span><strong>Pickup only</strong><small>inside the window</small></span></div>
           </div>
           <div className="hero-scene" data-reveal="scale">
             <figure data-scroll-media="24"><img src="/assets/bugsha-community-story.webp" alt="A woman using her phone outside a neighborhood café" /></figure>
             <div className="hero-phone"><ScreenPhone active={0} screens={[{ src: "browse-en.png", alt: "Bugsha browse screen" }]} /></div>
-            <div className="hero-note"><BrandMark /><span><b>5 nearby</b> tonight in Salmiya</span></div>
+            <div className="hero-note"><BrandMark /><span><b>Opening in</b> Kuwait &amp; Egypt</span></div>
           </div>
         </section>
 
-        <section className="mission-statement">
-          <span data-reveal>GOOD FOOD SHOULD BE EATEN.</span>
-          <h2 data-reveal>A nightly marketplace for good food Kuwait’s kitchens made—but did not sell.</h2>
-        </section>
 
         <CookieReveal />
 
@@ -348,7 +344,7 @@ export default function Home() {
         <section className="local-story">
           <figure data-reveal="scale" data-scroll-media="42"><img src="/assets/bugsha-bakery-story.webp" alt="A local baker arranging fresh bread and pastries" loading="lazy" decoding="async" /><figcaption>Made today · listed tonight</figcaption></figure>
           <div className="local-story-copy" data-reveal>
-            <span className="eyebrow">FROM KUWAIT’S KITCHENS</span>
+            <span className="eyebrow">FROM LOCAL KITCHENS</span>
             <h2>Real kitchens. Real food. One more chance to enjoy it.</h2>
             <p>A Bugsha starts when a local kitchen has prepared more good food than the day needed. It ends when someone nearby collects it that same night.</p>
             <Link className="text-link" href="/impact">Read about our impact <Arrow /></Link>
@@ -356,11 +352,11 @@ export default function Home() {
         </section>
 
         <section className="home-impact">
-          <div className="impact-intro" data-reveal><span className="eyebrow light">KUWAIT, SO FAR</span><h2>Better value. Less waste.</h2><p>A simple nightly habit that rewards customers, supports local kitchens and keeps good food moving.</p></div>
+          <div className="impact-intro" data-reveal><span className="eyebrow light">WHAT ONE BUGSHA DOES</span><h2>Better value. Less waste.</h2><p>We have not opened yet, so there is nothing to boast about. Here is the arithmetic of a single pickup—and what we intend to repeat every night.</p></div>
           <div className="impact-numbers">
-            <article data-reveal><strong>1,284</strong><span>meals rescued</span></article>
-            <article data-reveal><strong>642 kg</strong><span>food kept from landfill</span></article>
-            <article data-reveal><strong>68%</strong><span>average customer saving</span></article>
+            <article data-reveal><strong>~2 meals</strong><span>saved from the bin, per Bugsha</span></article>
+            <article data-reveal><strong>~0.5 kg</strong><span>good food kept in the chain</span></article>
+            <article data-reveal><strong>~65%</strong><span>less than the counter price</span></article>
           </div>
         </section>
 

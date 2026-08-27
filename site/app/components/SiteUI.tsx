@@ -3,29 +3,24 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+/**
+ * The Bugsha mark: the Kerchief — a square of cloth with its top corner turned
+ * down. One colour; the fold is a lighter plane, never a cut-out. Colour and
+ * fold come from CSS custom properties so `inverse` works on any ground.
+ */
 export function BrandMark({ inverse = false }: { inverse?: boolean }) {
-  return <span className={`brand-mark ${inverse ? "inverse" : ""}`} aria-hidden="true"><i /><i /></span>;
+  return (
+    <span className={`brand-mark ${inverse ? "inverse" : ""}`} aria-hidden="true">
+      <svg viewBox="0 0 48 48">
+        <path fill="currentColor" d="M24 2.5 45.5 24 24 45.5 2.5 24 24 2.5Z" />
+        <path fill="var(--mark-fold,#fff)" fillOpacity="var(--mark-fold-o,.42)" d="M12.5 14h23L24 25.5 12.5 14Z" />
+      </svg>
+    </span>
+  );
 }
 
 export function Arrow() {
   return <span className="arrow" aria-hidden="true">↗</span>;
-}
-
-/**
- * The Bugsha mark: a square of cloth with its top corner turned down.
- *
- * This is the design system's Kerchief, which supersedes the CSS-drawn rotated
- * square in `BrandMark` above. The fold is a lighter plane, never a cut-out, so
- * on a white mark over the violet panel it takes the panel colour.
- */
-export function Kerchief({ size = 26, color = "#FFFFFF", fold = "#5B21B6" }:
-  { size?: number; color?: string; fold?: string }) {
-  return (
-    <svg className="kerchief" width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
-      <path fill={color} d="M24 2.5 45.5 24 24 45.5 2.5 24 24 2.5Z" />
-      <path fill={fold} d="M12.5 14h23L24 25.5 12.5 14Z" />
-    </svg>
-  );
 }
 
 export function CookieReveal() {
@@ -161,14 +156,14 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="footer-main">
         <Link className="brand" href="/"><BrandMark inverse /><strong>Bugsha</strong></Link>
-        <p>Good food belongs on a table, not in a bin. Built in Kuwait for tonight’s surplus.</p>
-        <a className="footer-email" href="mailto:hello@bugsha.com">hello@bugsha.com <Arrow /></a>
+        <p>Good food belongs on a table, not in a bin. Built for tonight’s surplus.</p>
+        <a className="footer-email" href="mailto:hello@bugsha.app">hello@bugsha.app <Arrow /></a>
       </div>
       <div className="footer-links">
         <div><small>Explore</small><Link href="/how-it-works">How it works</Link><Link href="/impact">Our impact</Link><Link href="/#faq">FAQ</Link></div>
-        <div><small>Business</small><Link href="/partners">For businesses</Link><a href="mailto:partners@bugsha.com">Become a partner</a><a href="mailto:hello@bugsha.com">Support</a></div>
+        <div><small>Business</small><Link href="/partners">For businesses</Link><a href="mailto:partners@bugsha.app">Become a partner</a><a href="mailto:hello@bugsha.app">Support</a></div>
       </div>
-      <div className="footer-bottom"><span>© 2026 Bugsha</span><span>Privacy · Terms · Food safety</span><span>Kuwait</span></div>
+      <div className="footer-bottom"><span>© 2026 Bugsha</span><span>Privacy · Terms · Food safety</span><span>Kuwait · Egypt</span></div>
     </footer>
   );
 }
@@ -302,7 +297,7 @@ export function DownloadSection() {
           <p>We are opening in Kuwait and Egypt. Join the waitlist and we will tell you the moment kitchens near you start listing—early access, before the app opens publicly.</p>
           {status === "done" ? (
             <div className="waitlist-done" role="status">
-              <Kerchief />
+              <BrandMark />
               <div>
                 <strong>{result?.alreadyOnList ? "You are already on the list." : "You are on the list."}</strong>
                 <span>
