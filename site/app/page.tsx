@@ -20,6 +20,7 @@ const appSteps = [
 ];
 
 const faqs = [
+  ["When does Bugsha launch?", "This is our first launch—Bugsha has not opened anywhere yet. We are signing up our first partner kitchens in Kuwait and Egypt now and will open city by city. Join the waitlist and we will email you before yours goes live; waitlist members get access first."],
   ["What is actually inside a Bugsha?", "Whatever that kitchen made today and has left at closing. You see the category, dietary tags and value before paying; the exact mix remains a nightly surprise."],
   ["Is the food safe?", "It is the same food prepared for sale earlier that day, packed by the kitchen team and collected within a clearly defined pickup window."],
   ["Can I choose the contents?", "You can filter by food type and dietary information, but the kitchen chooses the exact contents. That flexibility is what makes the value possible."],
@@ -336,7 +337,7 @@ export default function Home() {
               <span className="eyebrow light">GOOD FOOD, ENJOYED TOGETHER</span>
               <h2>The best surprise is sharing it.</h2>
               <p>Tonight’s extra can become the thing everyone reaches for first.</p>
-              <Link className="button button-light" href="/how-it-works">See how Bugsha works <Arrow /></Link>
+              <Link className="button button-light" href="/how-it-works">See how Bugsha will work <Arrow /></Link>
             </div>
           </div>
         </section>
@@ -347,7 +348,7 @@ export default function Home() {
             <span className="eyebrow">FROM LOCAL KITCHENS</span>
             <h2>Real kitchens. Real food. One more chance to enjoy it.</h2>
             <p>A Bugsha starts when a local kitchen has prepared more good food than the day needed. It ends when someone nearby collects it that same night.</p>
-            <Link className="text-link" href="/impact">Read about our impact <Arrow /></Link>
+            <Link className="text-link" href="/impact">Read what we are building <Arrow /></Link>
           </div>
         </section>
 

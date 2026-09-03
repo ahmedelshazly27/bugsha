@@ -5,9 +5,13 @@ import "./globals.css";
 // Archivo is the brand face. Loaded through next/font so it is self-hosted and
 // emitted with the static export — globals.css referenced "Archivo" before this
 // but nothing fetched it, so every page silently fell back to system-ui.
+// No `weight` on purpose: Archivo is a variable font, and naming discrete
+// weights makes next/font serve static instances instead of the axis. The
+// design uses in-between values (the hero h1 is font-weight:760), which snap to
+// 700 or 800 without the full 100-900 range — and the headline then wraps onto
+// an extra line.
 const archivo = Archivo({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-archivo",
   display: "swap",
 });

@@ -18,7 +18,7 @@ export default function PartnersPage() {
     <main className="interior-page">
       <section className="partner-hero-page">
         <figure data-reveal="scale" data-scroll-media="38"><img src="/assets/bugsha-partner-bakery.webp" alt="A local baker handing a freshly packed order to a customer" loading="eager" decoding="async" /><figcaption>Prepared today · discovered tonight</figcaption></figure>
-        <div data-reveal><span className="eyebrow">BUGSHA FOR BUSINESSES</span><h1>Sell more of what you already made.</h1><p>List tonight’s surplus without changing your kitchen workflow. Bugsha handles discovery, payment and the collection record.</p><a className="button button-primary" href="mailto:partners@bugsha.app">Become a partner <Arrow /></a></div>
+        <div data-reveal><span className="eyebrow">BUGSHA FOR BUSINESSES</span><h1>Be one of the first kitchens on Bugsha.</h1><p>We are opening in Kuwait and Egypt and signing our first partner kitchens now. List tonight’s surplus without changing your kitchen workflow—Bugsha handles discovery, payment and the collection record.</p><a className="button button-primary" href="mailto:partners@bugsha.app">Become a founding partner <Arrow /></a></div>
       </section>
 
       <section className="partner-benefits"><div className="section-intro" data-reveal><span className="eyebrow">SIMPLE BY DESIGN</span><h2>A new sales channel, not a new operation.</h2></div><div className="benefit-row">{benefits.map(([title, body], index) => <article key={title} data-reveal><span>0{index + 1}</span><h3>{title}</h3><p>{body}</p></article>)}</div></section>
@@ -33,7 +33,7 @@ export default function PartnersPage() {
         <div className="model-grid"><article data-reveal><strong>60 sec</strong><span>to publish a saved bundle</span></article><article data-reveal><strong>Weekly</strong><span>clear consolidated payouts</span></article><article data-reveal><strong>0 KD</strong><span>listing or subscription fees</span></article></div>
       </section>
 
-      <section className="business-cta" data-reveal><span className="eyebrow light">READY WHEN YOU ARE</span><h2>Give tonight’s food one more customer.</h2><p>Tell us about your kitchen and we will help set up the first listing.</p><a className="button button-light" href="mailto:partners@bugsha.app">partners@bugsha.app <Arrow /></a></section>
+      <section className="business-cta" data-reveal><span className="eyebrow light">READY WHEN YOU ARE</span><h2>Open with us, not after us.</h2><p>Tell us about your kitchen and we will walk through it with you before your city goes live.</p><a className="button button-light" href="mailto:partners@bugsha.app">partners@bugsha.app <Arrow /></a></section>
     </main>
     <SiteFooter />
   </>;
