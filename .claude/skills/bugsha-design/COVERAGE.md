@@ -72,7 +72,7 @@ Roles follow `public.partner_role` (`owner | manager | staff | accountant`) and 
 | ID | Screen | Platform | Verified |
 | --- | --- | --- | --- |
 | P-000 | Partner sign-in with email + 8-digit code | as consumer | DB · Commit |
-| P-001 | Join Bugsha: *I have a partner code* / *Request a partner code* | **new** — `supabase/platform/20260914_partner_invite_codes.sql` | Assumed (this repo's design) |
+| P-001 | Join Bugsha: *I have a partner code* / *Request a partner code* | **new** — `supabase/platform/20260914094502_partner_invite_codes.sql` | Assumed (this repo's design) |
 | P-002 | Enter your partner code — valid / invalid / expired / used | `app.check_partner_code` (port) | Assumed |
 | P-003 | Application, pre-filled from the code | `app.submit_application(p_code, market, legal_name, trading_name, categories[], contact_name, contact_phone, contact_email, city_id, branch_count, referral_source, est_daily_surplus_minor)`; alcohol rejected (BG105); phone must match market (BG102) | DB (fields) · Assumed (code gate) |
 | P-004 | Request a partner code (same form, no code) | website `partner-request` edge function + `public.partner_request` | DB (this repo) |
@@ -124,7 +124,7 @@ Every forced action takes a reason code from `public.reason_code` and a justific
 | --- | --- | --- |
 | "Request a partner code" form on bugsha.app/partners | `site/app/components/PartnerRequest.tsx`, `site/app/partners/page.tsx`, `site/app/globals.css` | Built, type-checked, built with `next build`, driven in headless Chromium against a mocked endpoint |
 | `partner-request` edge function + `public.partner_request` table + two emails | `supabase/functions/partner-request/`, `supabase/functions/_shared/validate-partner.ts`, `supabase/migrations/20260914090000_partner_request.sql`, `supabase/functions/_shared/templates/partner-request-*.js`, previews in `emails/preview/` | Written; validator unit-tested under Node; deployed to the platform Supabase project (`fxjvxmuporiwpqalbddv`) together with the waitlist, which moved there from the paused `qrmyhruvnqmjwxcnkocj` project |
-| Invite codes, the gate on `app.submit_application`, ops RPCs | `supabase/platform/20260914_partner_invite_codes.sql` | Written against the platform schema; **to be applied from `bugsha-platform`** (see `supabase/platform/README.md`) |
+| Invite codes, the gate on `app.submit_application`, ops RPCs | `supabase/platform/20260914094502_partner_invite_codes.sql` | **Applied to bugsha-dev** as version 20260914094502 and exercised end to end; copy into `bugsha-platform` migrations (see `supabase/platform/README.md`) |
 | Partner app screens P-001 … P-004, ops view S-O-010 / S-O-011 | kits | Designed and click-through; the Expo implementation lives in `bugsha-platform` |
 
 ## Known conflicts to reconcile against the Expo apps

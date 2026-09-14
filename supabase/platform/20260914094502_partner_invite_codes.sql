@@ -1,34 +1,44 @@
 -- ============================================================================
--- PLATFORM PORT — NOT applied by this repo.
+-- Code-gated partner sign-up — invite codes, request queue, ops actions.
 --
--- This file targets the *platform* Supabase project (bugsha-dev, project ref
--- fxjvxmuporiwpqalbddv), whose migrations live in ahmedelshazly27/bugsha-platform.
--- It is written against that schema as it stood on 2026-09-14 (45 migrations,
--- last: 20260910155443_partner_activation_fixes) and is meant to be copied into
--- bugsha-platform/supabase/migrations/ and applied with the platform's tooling.
--- Applying it out-of-band would drift the platform's migration history.
+-- Targets the platform Supabase project (bugsha-dev, ref fxjvxmuporiwpqalbddv),
+-- whose migration history lives in ahmedelshazly27/bugsha-platform.
+-- APPLIED to bugsha-dev on 2026-09-14 as version 20260914094502. Copy this file, together with
+-- ../migrations/20260914090455_waitlist_and_partner_request.sql, into
+-- bugsha-platform/supabase/migrations/ so that repo's history matches the DB.
+--
+-- Requires: the waitlist migration above (public.partner_request), and the
+-- platform schema as of 20260910155443_partner_activation_fixes
+-- (public.market, public.ops_user, app.ops_require, app.audit, app.valid_phone,
+-- app.is_ops, app.current_markets, public.reason_code).
 --
 -- What it does
---   1. public.partner_invite_code — the single-use codes Ops issues.
---   2. public.partner_request      — mirror of the website's request table so the
---                                    ops console reads one queue (the website's
---                                    edge function can write here directly once
---                                    the two projects are consolidated).
---   3. app.check_partner_code      — what the partner app calls on the "Enter
---                                    your partner code" screen (anon-safe).
+--   1. public.partner_invite_code — the single-use BG-XXXX-XXXX codes Ops issues.
+--   2. public.partner_request      — the website's request table, reconciled so the
+--                                    ops console reads one queue (market becomes the
+--                                    enum, owner + invite-code link added).
+--   3. app.check_partner_code      — what the partner app calls on the "Enter your
+--                                    partner code" screen (anon-safe).
 --   4. app.submit_application      — now REQUIRES a valid code and redeems it.
 --                                    Without a code the call is rejected (BG130).
---   5. app.ops_issue_partner_code / ops_revoke_partner_code / ops_partner_requests
+--                                    The code-less signature is dropped.
+--   5. app.ops_issue_partner_code / ops_revoke_partner_code /
+--      ops_decline_partner_request / ops_partner_requests / ops_partner_codes
 --                                  — the ops console actions, audited.
+--
+-- Emailing the code to the kitchen is NOT done here: the kitchen has no app
+-- user yet, so app.notify() cannot address it. The ops console sends the email
+-- (the code, expiry and email are on the returned row). Rollback: see
+-- rollback_20260914094502_partner_invite_codes.sql.
 -- ============================================================================
 
 -- 1. invite codes -------------------------------------------------------------
 create table if not exists public.partner_invite_code (
   code            text primary key,                                   -- BG-XXXX-XXXX
   market          public.market not null,
-  request_id      uuid,                                               -- -> partner_request.id (nullable: ops can issue ad hoc)
+  request_id      uuid references public.partner_request(id),         -- nullable: ops can issue ad hoc
   issued_to_name  text not null,                                      -- trading name shown on the code screen
-  issued_to_email citext not null,
+  issued_to_email extensions.citext not null,
   legal_name      text,
   trading_name    text,
   issued_by       uuid not null references public.ops_user(user_id),
@@ -46,30 +56,13 @@ create index if not exists partner_invite_code_email_idx on public.partner_invit
 alter table public.partner_invite_code enable row level security;
 -- No policies: reads and writes go through app.* SECURITY DEFINER functions.
 
--- 2. requests (mirror of the website table; see ../migrations/20260914090000_partner_request.sql) ---
-create table if not exists public.partner_request (
-  id                uuid primary key default gen_random_uuid(),
-  market            public.market not null,
-  legal_name        text not null,
-  trading_name      text not null,
-  categories        text[] not null default '{}',
-  contact_name      text not null,
-  contact_phone     text not null,
-  contact_email     citext not null,
-  city              text,
-  branch_count      integer not null default 1,
-  est_daily_surplus text,
-  referral_source   text,
-  source            text,
-  status            text not null default 'new' check (status in ('new','contacted','code_issued','declined')),
-  decline_reason    text,
-  invite_code       text references public.partner_invite_code(code),
-  owner_ops_user    uuid references public.ops_user(user_id),
-  notes             text,
-  created_at        timestamptz not null default now(),
-  updated_at        timestamptz not null default now()
-);
-alter table public.partner_request enable row level security;
+-- 2. reconcile the website's request table with the platform ------------------
+alter table public.partner_request drop constraint if exists partner_request_market_check;
+alter table public.partner_request alter column market type public.market using market::public.market;
+alter table public.partner_request add column if not exists owner_ops_user uuid references public.ops_user(user_id);
+alter table public.partner_request drop constraint if exists partner_request_invite_code_fkey;
+alter table public.partner_request add constraint partner_request_invite_code_fkey
+  foreign key (invite_code) references public.partner_invite_code(code);
 
 -- 3. code check for the partner app -------------------------------------------
 -- Returns the pre-fill for the application form, or a status the client maps to
@@ -121,9 +114,6 @@ begin
     p_branch_count, p_contact_name, 'owner', p_contact_phone, p_contact_email, p_city_id, coalesce(p_referral_source, 'partner_code'), p_est_daily_surplus_minor, c.issued_by)
   returning * into v_row;
   update public.partner_invite_code set redeemed_at = now(), redeemed_by = v_uid, partner_id = v_row.partner_id where code = c.code;
-  if c.request_id is not null then
-    update public.partner_request set status = 'code_issued', updated_at = now() where id = c.request_id;
-  end if;
   insert into public.partner_user (user_id, full_name, phone) values (v_uid, p_contact_name, p_contact_phone) on conflict (user_id) do nothing;
   insert into public.staff_assignment (user_id, partner_id, store_id, role, partner_wide, claimed_at)
   values (v_uid, v_row.partner_id, null, 'owner', true, now());
@@ -143,6 +133,7 @@ begin
   select * into r from public.partner_request where id = p_request for update;
   if not found then raise exception 'request not found' using errcode = 'BG132'; end if;
   if r.status = 'code_issued' then raise exception 'a code was already issued for this request' using errcode = 'BG133'; end if;
+  if r.status = 'declined' then raise exception 'this request was declined' using errcode = 'BG135'; end if;
   loop
     v_code := 'BG-' || (select string_agg(substr(v_alphabet, 1 + floor(random() * 32)::int, 1), '') from generate_series(1, 4))
                     || '-' || (select string_agg(substr(v_alphabet, 1 + floor(random() * 32)::int, 1), '') from generate_series(1, 4));
@@ -151,9 +142,11 @@ begin
   insert into public.partner_invite_code (code, market, request_id, issued_to_name, issued_to_email, legal_name, trading_name, issued_by, expires_at)
   values (v_code, r.market, r.id, r.trading_name, r.contact_email, r.legal_name, r.trading_name, auth.uid(), now() + make_interval(days => greatest(1, p_days)))
   returning * into c;
-  update public.partner_request set status = 'code_issued', invite_code = v_code, owner_ops_user = coalesce(owner_ops_user, auth.uid()), updated_at = now() where id = r.id;
+  update public.partner_request
+     set status = 'code_issued', invite_code = v_code, code_issued_at = now(), code_issued_by = auth.uid()::text,
+         owner_ops_user = coalesce(owner_ops_user, auth.uid()), updated_at = now()
+   where id = r.id;
   perform app.audit('ops_issue_partner_code', 'partner_request', r.id, null, jsonb_build_object('code', v_code, 'expires_at', c.expires_at), null, p_reason, r.market);
-  perform app.notify(null, 'partner.code_issued', jsonb_build_object('code', v_code, 'email', r.contact_email, 'trading_name', r.trading_name));
   return c;
 end $$;
 
@@ -166,6 +159,8 @@ begin
   if not found then raise exception 'code not found' using errcode = 'BG132'; end if;
   if c.redeemed_at is not null then raise exception 'code already redeemed — suspend the partner instead' using errcode = 'BG134'; end if;
   update public.partner_invite_code set revoked_at = now(), revoked_by = auth.uid(), revoke_reason = p_reason where code = c.code;
+  -- Let the request be issued a fresh code.
+  update public.partner_request set status = 'contacted', invite_code = null, updated_at = now() where invite_code = c.code;
   perform app.audit('ops_revoke_partner_code', 'partner_invite_code', null, null, jsonb_build_object('code', c.code), null, p_reason, c.market);
 end $$;
 
@@ -175,6 +170,7 @@ declare r public.partner_request;
 begin
   perform app.ops_require(array['ops_manager','admin']::public.ops_role[]);
   select * into r from public.partner_request where id = p_request for update;
+  if not found then raise exception 'request not found' using errcode = 'BG132'; end if;
   update public.partner_request set status = 'declined', decline_reason = p_reason_code, notes = coalesce(p_text, notes), updated_at = now() where id = p_request;
   perform app.audit('ops_decline_partner_request', 'partner_request', p_request, null, null, p_reason_code, p_text, r.market);
 end $$;
@@ -201,9 +197,4 @@ insert into public.reason_code (code, domain, label_en, label_ar_kw, label_ar_eg
   ('duplicate',             'partner_request', 'Duplicate request',     'طلب مكرر', 'طلب مكرر', false, true),
   ('no_response',           'partner_request', 'No response',           'ما فيه رد', 'مفيش رد', false, true),
   ('other',                 'partner_request', 'Other',                 'غير', 'تاني', true, true)
-on conflict do nothing;
-
--- notification template the issue action sends (email channel)
-insert into public.notification_template (key, locale, title, body, deep_link, bypasses_quiet_hours, published, version) values
-  ('partner.code_issued', 'en', 'Your Bugsha partner code', 'Your code is {code}. Open the Bugsha Partner app, choose "I have a partner code", and sign up with {email}. It expires in 14 days and can be used once.', 'bugsha-partner://signup?code=:code', true, true, 1)
 on conflict do nothing;
