@@ -158,7 +158,9 @@ function SignIn({ onSession }: { onSession: (s: Session) => void }) {
     if (busy) return;
     setBusy(true); setError("");
     try {
-      await authPost("otp", { email: email.trim(), create_user: false });
+      // If the project's email template carries a link instead of a code, the link should land back here.
+      const back = encodeURIComponent(`${window.location.origin}${window.location.pathname}`);
+      await authPost(`otp?redirect_to=${back}`, { email: email.trim(), create_user: false });
       setStage("code");
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Could not send the code.";
