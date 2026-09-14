@@ -18,7 +18,7 @@ import { Arrow, BrandMark } from "./SiteUI";
 type RequestResult = { ok: boolean; requestId?: string | null; repeat?: boolean; error?: string };
 
 const WAITLIST_ENDPOINT =
-  process.env.NEXT_PUBLIC_WAITLIST_ENDPOINT ?? "https://qrmyhruvnqmjwxcnkocj.supabase.co/functions/v1/waitlist-signup";
+  process.env.NEXT_PUBLIC_WAITLIST_ENDPOINT ?? "https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/waitlist-signup";
 // Defaults to the sibling function of the waitlist endpoint, so no extra build config is needed.
 const REQUEST_ENDPOINT =
   process.env.NEXT_PUBLIC_PARTNER_REQUEST_ENDPOINT ?? WAITLIST_ENDPOINT.replace(/waitlist-signup$/, "partner-request");

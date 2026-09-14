@@ -73,7 +73,7 @@ to the same edge function. Along with it:
 Set the endpoint at build time:
 
 ```
-NEXT_PUBLIC_WAITLIST_ENDPOINT=https://qrmyhruvnqmjwxcnkocj.supabase.co/functions/v1/waitlist-signup
+NEXT_PUBLIC_WAITLIST_ENDPOINT=https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/waitlist-signup
 ```
 
 Verified by running `npm run dev` and driving the real page in headless Chromium
@@ -116,7 +116,7 @@ Status of each piece:
 | Piece | Status |
 | --- | --- |
 | Website form | Built and type-checked; `next build` passes; driven in headless Chromium against a mocked endpoint |
-| `partner-request` function, table, emails | Written; validator unit-tested; previews in `emails/preview/`. **Not deployed:** the waitlist Supabase project (`qrmyhruvnqmjwxcnkocj`) is paused (`INACTIVE`), which also means the live waitlist form is not saving signups until it is restored |
+| `partner-request` function, table, emails | Deployed to the platform Supabase project (`fxjvxmuporiwpqalbddv`) alongside the waitlist functions; validator unit-tested; previews in `emails/preview/`. Email sending needs the Resend secrets set on that project (see below) |
 | Platform SQL (`supabase/platform/`) | Written against the platform schema as of 2026-09-14; to be copied into `bugsha-platform/supabase/migrations/` and applied there — this session had no access to that repository |
 | Partner app + ops console screens | Designed as working click-throughs in the design system kits; the Expo implementation lives in `bugsha-platform` |
 
@@ -170,22 +170,40 @@ function with the service role. That keeps the subscriber list off PostgREST ent
 
 ## Live
 
-Applied to the **Bugsha** project (`qrmyhruvnqmjwxcnkocj`) in the
-`ahmedelshazly2345-gmailcom's projects` org:
+Everything runs on the **platform** Supabase project, `bugsha-dev` (`fxjvxmuporiwpqalbddv`),
+the same database the Expo apps use. The waitlist moved there on 2026-09-14 from the
+original `Bugsha` project (`qrmyhruvnqmjwxcnkocj`), which is paused and should stay paused.
 
 | Piece | State |
 | --- | --- |
-| `public.waitlist` + `waitlist_position()` | applied (4 migrations) |
-| `waitlist-signup` | deployed, v4, `verify_jwt: false` |
-| `waitlist-unsubscribe` | deployed, v4, `verify_jwt: false` |
-| Secrets (`RESEND_API_KEY`, …) | set — sending verified against `delivered@resend.dev` |
-| Website | **live** at bugsha.vercel.app, form wired |
+| `public.waitlist` + `waitlist_position()` + `public.partner_request` | applied as migration `20260914090455_waitlist_and_partner_request` |
+| `waitlist-signup` | deployed, `verify_jwt: false` — a signup posted from inside Postgres returned `200 {ok, position: 1}` |
+| `waitlist-unsubscribe` | deployed, `verify_jwt: false` |
+| `partner-request` | deployed, `verify_jwt: false` — a request posted from inside Postgres returned `200 {ok, requestId}` |
+| Secrets (`RESEND_API_KEY`, `WAITLIST_FROM_EMAIL`, `WAITLIST_ADMIN_EMAIL`, `PARTNER_TEAM_EMAIL`, `WAITLIST_ALLOWED_ORIGINS`) | **not yet set on this project** — rows save either way; confirmation and team emails start the moment the secrets exist |
+| Signups collected on the old project | **not yet copied** — the old project cannot be restored while two other free projects are active (Supabase's limit); pause one, restore `qrmyhruvnqmjwxcnkocj`, copy `public.waitlist`, pause it again |
+| Website | **live** at bugsha.app, both forms pointed at this project |
 
-Endpoint: `https://qrmyhruvnqmjwxcnkocj.supabase.co/functions/v1/waitlist-signup`
+Endpoints:
 
-`verify_jwt` is off on both by design — they are public endpoints hit by anonymous
-visitors, and each implements its own protection (validation + honeypot on signup,
-an unguessable token on unsubscribe).
+```
+https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/waitlist-signup
+https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/waitlist-unsubscribe?token=…
+https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/partner-request
+```
+
+Set the secrets once (the values live in the old project's Edge Function secrets):
+
+```
+supabase link --project-ref fxjvxmuporiwpqalbddv
+supabase secrets set --env-file .env
+```
+
+`verify_jwt` is off on all three by design — they are public endpoints hit by anonymous
+visitors, and each implements its own protection (validation + honeypot, an unguessable
+token on unsubscribe). Because the project's migration history now carries this version,
+copy `supabase/migrations/20260914090455_waitlist_and_partner_request.sql` into
+`bugsha-platform/supabase/migrations/` so the platform repo matches the database.
 
 ### Still to do
 
@@ -208,7 +226,7 @@ copy, so `site.css` needs no change — only the handler is wired. Paste it over
 original function, and set the endpoint before the bundle runs:
 
 ```html
-<script>window.BUGSHA_WAITLIST_ENDPOINT = 'https://qrmyhruvnqmjwxcnkocj.supabase.co/functions/v1/waitlist-signup';</script>
+<script>window.BUGSHA_WAITLIST_ENDPOINT = 'https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/waitlist-signup';</script>
 ```
 
 If you'd rather not touch the bundle at all, `web/waitlist.js` attaches to any
@@ -223,7 +241,7 @@ domain is attached.
 ## Reproducing the database from scratch
 
 ```bash
-supabase link --project-ref qrmyhruvnqmjwxcnkocj
+supabase link --project-ref fxjvxmuporiwpqalbddv
 supabase db push
 ```
 

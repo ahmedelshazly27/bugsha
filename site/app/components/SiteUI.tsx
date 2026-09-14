@@ -234,7 +234,7 @@ type SignupResult = { ok: boolean; alreadyOnList?: boolean; position?: number | 
 // a build at a different Supabase project.
 const WAITLIST_ENDPOINT =
   process.env.NEXT_PUBLIC_WAITLIST_ENDPOINT ??
-  "https://qrmyhruvnqmjwxcnkocj.supabase.co/functions/v1/waitlist-signup";
+  "https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/waitlist-signup";
 
 /**
  * Pre-launch waitlist panel.
