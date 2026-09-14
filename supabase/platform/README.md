@@ -22,7 +22,12 @@ the application's status-history row cited a reason code that did not exist, so 
 sign-up would have failed on the foreign key. It now uses the registered reason
 `partner_code` and keeps the code in `reason_text`.
 
-**All five files are now also in `bugsha-platform/supabase/migrations/`** (ported 2026-09-14),
+`20260914133248_client_surface.sql` (applied) exposes what the design-system screens needed and
+the RPCs did not return: `my_profile()` gains the restriction and deletion fields, `cancel_deletion()`
+undoes a scheduled deletion, `my_partner()` carries status history and suspension, and
+`my_quality_flags()` / `my_disputes()` / `respond_dispute()` give the partner app its quality page.
+
+**All six files are now also in `bugsha-platform/supabase/migrations/`** (ported 2026-09-14),
 alongside the Expo partner-app screens (`apps/partner/app/join/*`), the ops console's
 `/requests` view and pgTAP coverage (`supabase/tests/10_partner_codes.sql`).
 

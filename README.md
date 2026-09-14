@@ -225,11 +225,14 @@ supabase/platform/20260914094502_partner_invite_codes.sql
 supabase/platform/20260914095840_partner_code_email.sql
 supabase/platform/20260914110851_partner_code_client_support.sql
 supabase/platform/20260914111830_partner_code_status_history.sql
+supabase/platform/20260914133248_client_surface.sql
 ```
 
-Done on 2026-09-14: the five files sit in `bugsha-platform/supabase/migrations/`, the Expo
-partner app gained the join / code / application / request screens, and the ops console a
-`/requests` view (branch `claude/partner-code-gate` in that repo).
+Done on 2026-09-14: the six files sit in `bugsha-platform/supabase/migrations/`, and branch
+`claude/partner-code-gate` in that repo carries the full screen pass — consumer (every order
+state, restriction, deletion undo, promo, quiet hours, pickup QR), partner (code-gated join,
+onboarding status hub, QR redeem with late hand-over, schedules, branch pause, quality flags
+and disputes) and the ops console (every S-O screen wired to the platform RPCs).
 
 ### Still to do
 
