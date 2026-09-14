@@ -10,6 +10,7 @@ import { welcomeEmail } from '../supabase/functions/_shared/templates/welcome.js
 import { adminNotifyEmail } from '../supabase/functions/_shared/templates/admin-notify.js';
 import { partnerRequestReceivedEmail } from '../supabase/functions/_shared/templates/partner-request-received.js';
 import { partnerRequestNotifyEmail } from '../supabase/functions/_shared/templates/partner-request-notify.js';
+import { partnerCodeIssuedEmail } from '../supabase/functions/_shared/templates/partner-code-issued.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = join(root, 'emails', 'preview');
@@ -47,6 +48,13 @@ const emails = [
       contactName: 'Yousef Al-Kandari', contactPhone: '+965 5512 3456', contactEmail: 'yousef@kuwaitbakehouse.com', branchCount: 3, estDailySurplus: 'KD 25',
       referralSource: 'Founder network', source: 'site-partners', referrer: 'https://bugsha.app/partners', userAgent: 'Mozilla/5.0 (Macintosh) Safari/605.1.15',
       openTotal: 4, dashboardUrl: 'https://bugsha-ops.vercel.app/requests?id=sample',
+    }),
+  ],
+  [
+    'partner-code-issued',
+    partnerCodeIssuedEmail({
+      code: 'BG-4XB7-582G', tradingName: 'Kuwait Bakehouse', contactName: 'Yousef Al-Kandari', email: 'yousef@kuwaitbakehouse.com', market: 'KW',
+      expiresAt: '2026-09-28T09:47:00Z', deepLink: 'bugsha-partner://signup?code=BG-4XB7-582G', siteUrl: SAMPLE.siteUrl,
     }),
   ],
 ];

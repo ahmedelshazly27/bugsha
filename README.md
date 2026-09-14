@@ -24,9 +24,12 @@ supabase/
     partner-request/             POST endpoint behind "Request a partner code" on /partners
     _shared/validate-partner.ts  its input hardening (mirrors app.submit_application)
     _shared/templates/partner-request-received.js / partner-request-notify.js
-  platform/                      SQL written for the platform DB (invite codes + the sign-up gate) — applied from bugsha-platform, not here
+    partner-code-email/          emails a partner code to the kitchen — called by a DB trigger, never by a person
+    _shared/templates/partner-code-issued.js
+  platform/                      invite codes, the sign-up gate, the code-email trigger — applied to the platform DB (bugsha-dev) on 2026-09-14; copy into bugsha-platform's migrations
 site/                            the Next.js website source
   app/components/PartnerRequest.tsx  the partner-code request form on /partners
+  app/ops/ + app/components/OpsConsole.tsx  bugsha.app/ops — the live request queue: sign in, issue, decline, revoke, resend
 web/
   DownloadSection.jsx            drop-in replacement for the site's waitlist panel
   waitlist.js                    vanilla alternative, no rebuild required
@@ -102,10 +105,15 @@ A partner account can only be opened with a code issued by the Bugsha team. The 
    `public.partner_request` and emails the kitchen a confirmation and the partner team a
    notification with a deep link into the ops console. Field set mirrors
    `app.submit_application` on the platform so nothing is typed twice.
-2. **Issue** — in the ops console (kit view S-O-010 *Requests & codes*) a person reviews the
-   request and issues a single-use `BG-XXXX-XXXX` code with a 14-day expiry, or declines with a
-   reason. `supabase/platform/20260914_partner_invite_codes.sql` adds the table and the
+2. **Issue** — at **`bugsha.app/ops`** (the kit's S-O-010 *Requests & codes*, live) an ops
+   manager or admin signs in with a one-time email code, reviews the request and issues a
+   single-use `BG-XXXX-XXXX` code with a 7/14/30-day expiry, or declines with a reason.
+   `supabase/platform/20260914094502_partner_invite_codes.sql` adds the table and the
    `app.ops_issue_partner_code` / `ops_revoke_partner_code` / `ops_decline_partner_request` RPCs.
+   **The code is emailed by the database**: an `AFTER INSERT` trigger on `partner_invite_code`
+   posts to the `partner-code-email` function (signed with a Vault secret), which sends *Your
+   Bugsha partner code* and writes `emailed_at` / `email_error` back on the row — the ops page
+   shows delivery per code, with *Resend*. (`supabase/platform/20260914095840_partner_code_email.sql`.)
 3. **Sign up** — in the partner app, *I have a partner code* (kit P-002) checks the code with
    `app.check_partner_code` and pre-fills the application; `app.submit_application` now takes
    `p_code`, rejects anything without a live code (BG130), and marks the code redeemed. The
@@ -117,8 +125,9 @@ Status of each piece:
 | --- | --- |
 | Website form | Built and type-checked; `next build` passes; driven in headless Chromium against a mocked endpoint |
 | `partner-request` function, table, emails | Deployed to the platform Supabase project (`fxjvxmuporiwpqalbddv`) alongside the waitlist functions; validator unit-tested; previews in `emails/preview/`. Email sending needs the Resend secrets set on that project (see below) |
-| Platform SQL (`supabase/platform/`) | Written against the platform schema as of 2026-09-14; to be copied into `bugsha-platform/supabase/migrations/` and applied there — this session had no access to that repository |
-| Partner app + ops console screens | Designed as working click-throughs in the design system kits; the Expo implementation lives in `bugsha-platform` |
+| Platform SQL (`supabase/platform/`) | **Applied to bugsha-dev** as version `20260914094502_partner_invite_codes` and exercised end to end (issue → check → revoke, and the website form still writes to the reconciled table). The Expo partner app must now pass `p_code` to `app.submit_application`; the old signature is gone. Copy the file into `bugsha-platform/supabase/migrations/` so that repo's history matches; `rollback_…sql` restores the previous state |
+| Ops console: requests & codes | **Live at `bugsha.app/ops`** (email one-time-code sign-in; `app.ops_*` RPCs decide who may act). Driven end to end in headless Chromium against mocked endpoints; issue → trigger → email verified on the real project |
+| Partner app screens | Designed as working click-throughs in the design system kit; the Expo implementation lives in `bugsha-platform`, which this session could not open — until it sends `p_code`, its sign-up call fails with `BG130` |
 
 To deploy the website side once the project is restored:
 
@@ -177,11 +186,15 @@ original `Bugsha` project (`qrmyhruvnqmjwxcnkocj`), which is paused and should s
 | Piece | State |
 | --- | --- |
 | `public.waitlist` + `waitlist_position()` + `public.partner_request` | applied as migration `20260914090455_waitlist_and_partner_request` |
+| `public.partner_invite_code`, `app.check_partner_code`, code-gated `app.submit_application`, `app.ops_*_partner_*` | applied as migration `20260914094502_partner_invite_codes` |
+| Code-email trigger, Vault hook secret, `app.ops_resend_partner_code` | applied as migration `20260914095840_partner_code_email` |
+| `partner-code-email` | deployed, `verify_jwt: false` — authenticates the database's call with the Vault secret; a real issue from SQL produced `200 {ok, sent: true}` and `emailed_at` on the row |
+| `bugsha.app/ops` | **live** — the request queue; only accounts in `public.ops_user` get past sign-in |
 | `waitlist-signup` | deployed, `verify_jwt: false` — a signup posted from inside Postgres returned `200 {ok, position: 1}` |
 | `waitlist-unsubscribe` | deployed, `verify_jwt: false` |
 | `partner-request` | deployed, `verify_jwt: false` — a request posted from inside Postgres returned `200 {ok, requestId}` |
-| Secrets (`RESEND_API_KEY`, `WAITLIST_FROM_EMAIL`, `WAITLIST_ADMIN_EMAIL`, `PARTNER_TEAM_EMAIL`, `WAITLIST_ALLOWED_ORIGINS`) | **not yet set on this project** — rows save either way; confirmation and team emails start the moment the secrets exist |
-| Signups collected on the old project | **not yet copied** — the old project cannot be restored while two other free projects are active (Supabase's limit); pause one, restore `qrmyhruvnqmjwxcnkocj`, copy `public.waitlist`, pause it again |
+| Secrets (`RESEND_API_KEY`, `WAITLIST_FROM_EMAIL`, `WAITLIST_ADMIN_EMAIL`, `PARTNER_TEAM_EMAIL`) | set on the project 2026-09-14. Leave optional secrets unset rather than empty: an empty value overrides the built-in default |
+| Signups collected on the old project | not copied, by decision — they are not needed |
 | Website | **live** at bugsha.app, both forms pointed at this project |
 
 Endpoints:
@@ -190,6 +203,7 @@ Endpoints:
 https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/waitlist-signup
 https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/waitlist-unsubscribe?token=…
 https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/partner-request
+https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/partner-code-email   (database → function only)
 ```
 
 Set the secrets once (the values live in the old project's Edge Function secrets):
@@ -201,9 +215,15 @@ supabase secrets set --env-file .env
 
 `verify_jwt` is off on all three by design — they are public endpoints hit by anonymous
 visitors, and each implements its own protection (validation + honeypot, an unguessable
-token on unsubscribe). Because the project's migration history now carries this version,
-copy `supabase/migrations/20260914090455_waitlist_and_partner_request.sql` into
-`bugsha-platform/supabase/migrations/` so the platform repo matches the database.
+token on unsubscribe). The project's migration history now carries two versions that
+this repo authored; copy both files into `bugsha-platform/supabase/migrations/` so the
+platform repo matches the database:
+
+```
+supabase/migrations/20260914090455_waitlist_and_partner_request.sql
+supabase/platform/20260914094502_partner_invite_codes.sql
+supabase/platform/20260914095840_partner_code_email.sql
+```
 
 ### Still to do
 
