@@ -224,9 +224,10 @@ supabase/migrations/20260914090455_waitlist_and_partner_request.sql
 supabase/platform/20260914094502_partner_invite_codes.sql
 supabase/platform/20260914095840_partner_code_email.sql
 supabase/platform/20260914110851_partner_code_client_support.sql
+supabase/platform/20260914111830_partner_code_status_history.sql
 ```
 
-Done on 2026-09-14: the four files sit in `bugsha-platform/supabase/migrations/`, the Expo
+Done on 2026-09-14: the five files sit in `bugsha-platform/supabase/migrations/`, the Expo
 partner app gained the join / code / application / request screens, and the ops console a
 `/requests` view (branch `claude/partner-code-gate` in that repo).
 
