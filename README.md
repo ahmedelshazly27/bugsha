@@ -6,6 +6,10 @@ A signup goes: **waitlist panel → `waitlist-signup` edge function → `public.
 
 ```
 .claude/skills/bugsha-design/    the design system, installed as a skill
+  ui_kits/bugsha/                consumer app — every stage, every order state, KW + EG
+  ui_kits/partner/               partner app — code-gated sign-up, every onboarding status, role-aware console
+  ui_kits/ops/                   ops console — requests & codes, partners, orders, trust, finance, platform
+  COVERAGE.md                    each kit screen ↔ the platform table / RPC it mirrors, verified vs assumed
 supabase/
   migrations/                    table, RLS, position fn, linter fixes, area rename
   functions/
@@ -17,7 +21,12 @@ supabase/
     _shared/templates/admin-notify.js  internal new-signup ping
     waitlist-signup/             POST endpoint behind the form
     waitlist-unsubscribe/        one-click opt-out from the email footer
-site/                            the Next.js website source (no waitlist — see below)
+    partner-request/             POST endpoint behind "Request a partner code" on /partners
+    _shared/validate-partner.ts  its input hardening (mirrors app.submit_application)
+    _shared/templates/partner-request-received.js / partner-request-notify.js
+  platform/                      SQL written for the platform DB (invite codes + the sign-up gate) — applied from bugsha-platform, not here
+site/                            the Next.js website source
+  app/components/PartnerRequest.tsx  the partner-code request form on /partners
 web/
   DownloadSection.jsx            drop-in replacement for the site's waitlist panel
   waitlist.js                    vanilla alternative, no rebuild required
@@ -64,7 +73,7 @@ to the same edge function. Along with it:
 Set the endpoint at build time:
 
 ```
-NEXT_PUBLIC_WAITLIST_ENDPOINT=https://qrmyhruvnqmjwxcnkocj.supabase.co/functions/v1/waitlist-signup
+NEXT_PUBLIC_WAITLIST_ENDPOINT=https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/waitlist-signup
 ```
 
 Verified by running `npm run dev` and driving the real page in headless Chromium
@@ -82,6 +91,57 @@ dead form; `web/DownloadSection.jsx` is there if you ever want to wire that one 
 
 The personal photos that shipped alongside the source in the upload were not
 committed.
+
+## Partner sign-up is code-gated
+
+A partner account can only be opened with a code issued by the Bugsha team. The chain:
+
+1. **Request** — a kitchen fills in *Request a partner code* on `bugsha.app/partners`
+   (`site/app/components/PartnerRequest.tsx`; the same screen exists in the partner app kit as P-004).
+   The form posts to the `partner-request` edge function, which stores the request in
+   `public.partner_request` and emails the kitchen a confirmation and the partner team a
+   notification with a deep link into the ops console. Field set mirrors
+   `app.submit_application` on the platform so nothing is typed twice.
+2. **Issue** — in the ops console (kit view S-O-010 *Requests & codes*) a person reviews the
+   request and issues a single-use `BG-XXXX-XXXX` code with a 14-day expiry, or declines with a
+   reason. `supabase/platform/20260914_partner_invite_codes.sql` adds the table and the
+   `app.ops_issue_partner_code` / `ops_revoke_partner_code` / `ops_decline_partner_request` RPCs.
+3. **Sign up** — in the partner app, *I have a partner code* (kit P-002) checks the code with
+   `app.check_partner_code` and pre-fills the application; `app.submit_application` now takes
+   `p_code`, rejects anything without a live code (BG130), and marks the code redeemed. The
+   code-less signature is dropped so no client can bypass the gate.
+
+Status of each piece:
+
+| Piece | Status |
+| --- | --- |
+| Website form | Built and type-checked; `next build` passes; driven in headless Chromium against a mocked endpoint |
+| `partner-request` function, table, emails | Deployed to the platform Supabase project (`fxjvxmuporiwpqalbddv`) alongside the waitlist functions; validator unit-tested; previews in `emails/preview/`. Email sending needs the Resend secrets set on that project (see below) |
+| Platform SQL (`supabase/platform/`) | Written against the platform schema as of 2026-09-14; to be copied into `bugsha-platform/supabase/migrations/` and applied there — this session had no access to that repository |
+| Partner app + ops console screens | Designed as working click-throughs in the design system kits; the Expo implementation lives in `bugsha-platform` |
+
+To deploy the website side once the project is restored:
+
+```
+supabase db push
+supabase functions deploy partner-request --no-verify-jwt
+supabase secrets set PARTNER_TEAM_EMAIL=partners@bugsha.app OPS_REQUESTS_URL=https://bugsha-ops.vercel.app/requests
+```
+
+## Design-system kits — every screen, every stage
+
+`.claude/skills/bugsha-design/ui_kits/` now holds working click-throughs of all three Expo
+apps: the consumer app (`bugsha/`), the partner app (`partner/`) and the ops console (`ops/`).
+Each screen is mapped in `.claude/skills/bugsha-design/COVERAGE.md` to the platform table,
+enum or `app.*` RPC it mirrors, with a column saying whether it was verified against the
+platform database or assumed. The kits could not be diffed against the Expo source because
+`ahmedelshazly27/bugsha-platform` is private to this session; they were reconciled against the
+platform's live Supabase project instead (45 migrations, every RPC, enum, config row, document
+requirement, reason code and notification deep link). The three open questions that need the
+app source are listed at the end of `COVERAGE.md`.
+
+Open any kit's `index.html` in a browser. They load React and Babel from unpkg and the fonts
+from Google Fonts; no build step.
 
 ## Data model
 
@@ -110,22 +170,40 @@ function with the service role. That keeps the subscriber list off PostgREST ent
 
 ## Live
 
-Applied to the **Bugsha** project (`qrmyhruvnqmjwxcnkocj`) in the
-`ahmedelshazly2345-gmailcom's projects` org:
+Everything runs on the **platform** Supabase project, `bugsha-dev` (`fxjvxmuporiwpqalbddv`),
+the same database the Expo apps use. The waitlist moved there on 2026-09-14 from the
+original `Bugsha` project (`qrmyhruvnqmjwxcnkocj`), which is paused and should stay paused.
 
 | Piece | State |
 | --- | --- |
-| `public.waitlist` + `waitlist_position()` | applied (4 migrations) |
-| `waitlist-signup` | deployed, v4, `verify_jwt: false` |
-| `waitlist-unsubscribe` | deployed, v4, `verify_jwt: false` |
-| Secrets (`RESEND_API_KEY`, …) | set — sending verified against `delivered@resend.dev` |
-| Website | **live** at bugsha.vercel.app, form wired |
+| `public.waitlist` + `waitlist_position()` + `public.partner_request` | applied as migration `20260914090455_waitlist_and_partner_request` |
+| `waitlist-signup` | deployed, `verify_jwt: false` — a signup posted from inside Postgres returned `200 {ok, position: 1}` |
+| `waitlist-unsubscribe` | deployed, `verify_jwt: false` |
+| `partner-request` | deployed, `verify_jwt: false` — a request posted from inside Postgres returned `200 {ok, requestId}` |
+| Secrets (`RESEND_API_KEY`, `WAITLIST_FROM_EMAIL`, `WAITLIST_ADMIN_EMAIL`, `PARTNER_TEAM_EMAIL`, `WAITLIST_ALLOWED_ORIGINS`) | **not yet set on this project** — rows save either way; confirmation and team emails start the moment the secrets exist |
+| Signups collected on the old project | **not yet copied** — the old project cannot be restored while two other free projects are active (Supabase's limit); pause one, restore `qrmyhruvnqmjwxcnkocj`, copy `public.waitlist`, pause it again |
+| Website | **live** at bugsha.app, both forms pointed at this project |
 
-Endpoint: `https://qrmyhruvnqmjwxcnkocj.supabase.co/functions/v1/waitlist-signup`
+Endpoints:
 
-`verify_jwt` is off on both by design — they are public endpoints hit by anonymous
-visitors, and each implements its own protection (validation + honeypot on signup,
-an unguessable token on unsubscribe).
+```
+https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/waitlist-signup
+https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/waitlist-unsubscribe?token=…
+https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/partner-request
+```
+
+Set the secrets once (the values live in the old project's Edge Function secrets):
+
+```
+supabase link --project-ref fxjvxmuporiwpqalbddv
+supabase secrets set --env-file .env
+```
+
+`verify_jwt` is off on all three by design — they are public endpoints hit by anonymous
+visitors, and each implements its own protection (validation + honeypot, an unguessable
+token on unsubscribe). Because the project's migration history now carries this version,
+copy `supabase/migrations/20260914090455_waitlist_and_partner_request.sql` into
+`bugsha-platform/supabase/migrations/` so the platform repo matches the database.
 
 ### Still to do
 
@@ -148,7 +226,7 @@ copy, so `site.css` needs no change — only the handler is wired. Paste it over
 original function, and set the endpoint before the bundle runs:
 
 ```html
-<script>window.BUGSHA_WAITLIST_ENDPOINT = 'https://qrmyhruvnqmjwxcnkocj.supabase.co/functions/v1/waitlist-signup';</script>
+<script>window.BUGSHA_WAITLIST_ENDPOINT = 'https://fxjvxmuporiwpqalbddv.supabase.co/functions/v1/waitlist-signup';</script>
 ```
 
 If you'd rather not touch the bundle at all, `web/waitlist.js` attaches to any
@@ -163,7 +241,7 @@ domain is attached.
 ## Reproducing the database from scratch
 
 ```bash
-supabase link --project-ref qrmyhruvnqmjwxcnkocj
+supabase link --project-ref fxjvxmuporiwpqalbddv
 supabase db push
 ```
 

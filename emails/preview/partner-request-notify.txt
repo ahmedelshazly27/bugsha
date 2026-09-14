@@ -1,0 +1,13 @@
+Subject: New partner request: Kuwait Bakehouse (Kuwait, Hawalli)
+
+New partner request: Kuwait Bakehouse (Kuwait Bakehouse Co. W.L.L.)
+Where: Hawalli, Kuwait
+Makes: bakery, sweets
+Contact: Yousef Al-Kandari · +965 5512 3456 · yousef@kuwaitbakehouse.com
+Branches: 3
+Surplus / night: KD 25
+Heard via: Founder network
+Source: site-partners
+4 request(s) waiting for a code.
+
+Issue a code: https://bugsha-ops.vercel.app/requests?id=sample

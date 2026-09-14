@@ -24,6 +24,7 @@ const ListRow = NS.ListRow || function ListRow({ icon, label, value, chevron, on
 };
 const { bugshaCat: catLabel, bugshaMfmt: mfmt, bugshaKd: kd, bugshaSort: sortBags, BugshaBags: BAGS, BugshaPast: PAST } = window;
 
+const MK = m => window.BugshaStages.MARKETS[m || "KW"];
 const Num = ({ children, ...r }) => <span className="ds-numeric" dir="ltr" {...r}>{children}</span>;
 const H = ({ children, size = "var(--text-headline-size)", ...r }) =>
   <strong style={{ fontSize: size, fontWeight: 600, letterSpacing: "-0.015em" }} {...r}>{children}</strong>;
@@ -60,12 +61,13 @@ function Header({ t, ar, onFilter, onSearch, onLoc, filter, setFilter, count }) 
   </div>;
 }
 
-function Browse({ t, ar, go, filter, setFilter, sort }) {
+function Browse({ t, ar, go, filter, setFilter, sort, market = "KW" }) {
+  const sc = MK(market).scale, cur = MK(market).currency;
   const pool = sortBags(filter === "all" ? BAGS : BAGS.filter(b => b.cat === filter), sort);
   const soon = pool.filter(b => b.m <= 45), rest = pool.filter(b => b.m > 45);
   const hero = rest[0] || soon[0];
   const card = b => <BagCard key={b.id} partner={ar ? b.pa : b.p} title={t.surprise} category={b.cat}
-    cover={`../../assets/photos/${b.img}.png`} priceNow={b.now} priceWas={b.was} from={b.from} to={b.to}
+    cover={`../../assets/photos/${b.img}.png`} priceNow={b.now * sc} priceWas={b.was * sc} currency={cur} from={b.from} to={b.to}
     distanceKm={b.km} bagsLeft={b.left} rating={b.r} ratingCount={b.rc} minutesLeft={b.m}
     countdownFormat={mfmt(ar)} leftFormat={t.left} tags={[catLabel(t, b.cat)]} onClick={() => go({ screen: "detail", bag: b })} />;
   return <div>
@@ -76,7 +78,7 @@ function Browse({ t, ar, go, filter, setFilter, sort }) {
       : <React.Fragment>
         {soon.length ? <React.Fragment><SectionHead title={t.closing} meta="< 45 min" />
           {soon.map(b => <BagCard key={b.id} layout="row" partner={ar ? b.pa : b.p} title={t.surprise} category={b.cat}
-            cover={`../../assets/photos/${b.img}.png`} priceNow={b.now} priceWas={b.was} from={b.from} to={b.to}
+            cover={`../../assets/photos/${b.img}.png`} priceNow={b.now * sc} priceWas={b.was * sc} currency={cur} from={b.from} to={b.to}
             distanceKm={b.km} bagsLeft={b.left} rating={b.r} minutesLeft={b.m} countdownFormat={mfmt(ar)} leftFormat={t.left}
             onClick={() => go({ screen: "detail", bag: b })} />)}</React.Fragment> : null}
         {hero ? <React.Fragment><SectionHead title={t.tonight} meta={t.bundles(rest.length)} />{rest.map(card)}</React.Fragment> : null}
@@ -91,7 +93,8 @@ function Browse({ t, ar, go, filter, setFilter, sort }) {
 }
 
 /* ---------- search ---------- */
-function Search({ t, ar, go }) {
+function Search({ t, ar, go, market = "KW" }) {
+  const sc = MK(market).scale, cur = MK(market).currency;
   const [q, setQ] = React.useState("");
   const hits = q ? BAGS.filter(b => (ar ? b.pa : b.p).toLowerCase().includes(q.toLowerCase())) : BAGS.slice(0, 3);
   return <div style={{ display: "grid", gap: 0, alignContent: "start" }}>
@@ -109,21 +112,22 @@ function Search({ t, ar, go }) {
           <strong style={{ fontSize: "var(--text-label-size)", fontWeight: 600 }}>{ar ? b.pa : b.p}</strong>
           <span style={{ fontSize: "var(--text-caption-size)", color: "var(--color-text-secondary)" }}>
             {catLabel(t, b.cat)} · <Num>{b.km} km</Num></span></span>
-        <PriceTag now={b.now} was={b.was} /></button>)}
+        <PriceTag now={b.now * sc} was={b.was * sc} currency={cur} /></button>)}
       {q && !hits.length ? <EmptyState icon="search" title={t.empty} body={t.emptyBody} /> : null}
     </div>
   </div>;
 }
 
 /* ---------- detail ---------- */
-function Detail({ t, ar, b, qty, setQty, method, setMethod, go, paying, onPay }) {
+function Detail({ t, ar, b, qty, setQty, method, setMethod, go, paying, onPay, market = "KW", walletBal = 0, useCredit, setUseCredit, promo, setPromo, restricted, saved, toggleSaved }) {
+  const ST = window.BugshaStages, s = ST.S[ar ? "ar" : "en"], cur = ST.MARKETS[market].currency, m = ST.money;
   return <div>
     <CoverPlate src={`../../assets/photos/${b.img}.png`} category={b.cat} height={200} radius="0">
       <div style={{ position: "absolute", insetInlineStart: 12, top: 14 }}>
         <IconButton icon="chevron-left" label="Back" variant="solid" size={38} mirror onClick={() => go({ screen: "browse" })} /></div>
       <div style={{ position: "absolute", insetInlineEnd: 12, top: 14, display: "flex", gap: 8 }}>
         <IconButton icon="share-2" label="Share" variant="solid" size={38} />
-        <IconButton icon="heart" label="Save" variant="solid" size={38} /></div>
+        <IconButton icon="heart" label="Save" variant="solid" size={38} onClick={toggleSaved} style={saved ? { color: "var(--color-brand-primary)" } : undefined} /></div>
       <div style={{ position: "absolute", insetInlineStart: 16, bottom: 14, display: "flex", gap: 6 }}>
         <Badge tone="brand">{catLabel(t, b.cat)}</Badge>
         <Badge tone="neutral">{t.perDay}</Badge></div>
@@ -131,7 +135,7 @@ function Detail({ t, ar, b, qty, setQty, method, setMethod, go, paying, onPay })
     <div style={{ padding: 16, display: "grid", gap: 16 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
         <div style={{ minWidth: 0, display: "grid", gap: 6 }}>
-          <h2 style={{ fontSize: "var(--text-title-lg-size)", fontWeight: 600, letterSpacing: "-0.02em" }}>{ar ? b.pa : b.p}</h2>
+          <h2 style={{ fontSize: "var(--text-title-lg-size)", fontWeight: 600, letterSpacing: "-0.02em" }}><button onClick={() => go({ screen: "store", bag: b })} style={{ all: "unset", cursor: "pointer" }}>{ar ? b.pa : b.p}</button></h2>
           <RatingStars value={b.r} count={b.rc} />
           <span style={{ fontSize: "var(--text-caption-size)", color: "var(--color-text-secondary)" }}>
             {t.listedAt} <Num>{b.listed}</Num> · {b.left <= 1 ? t.one : t.left(b.left)}</span></div>
@@ -154,30 +158,27 @@ function Detail({ t, ar, b, qty, setQty, method, setMethod, go, paying, onPay })
       <div style={{ display: "grid", gap: 12, padding: "14px 0", borderTop: "1px solid var(--color-border-subtle)", borderBottom: "1px solid var(--color-border-subtle)" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
           <div style={{ display: "grid", gap: 3 }}>
-            <PriceTag now={b.now * qty} was={b.was * qty} size="lg" />
+            <PriceTag now={b.now * qty * ST.MARKETS[market].scale} was={b.was * qty * ST.MARKETS[market].scale} currency={cur} size="lg" />
             <span style={{ fontSize: "var(--text-caption-size)", color: "var(--color-text-secondary)" }}>
-              {t.worth} <Num>{kd(b.was * qty)}</Num> · {t.save} <Num>{kd((b.was - b.now) * qty)}</Num></span></div>
+              {t.worth} <Num>{m(market, b.was * qty)}</Num> · {t.save} <Num>{m(market, (b.was - b.now) * qty)}</Num></span></div>
           <div style={{ display: "grid", gap: 4, justifyItems: "end" }}>
             <span style={{ fontSize: "var(--text-caption-size)", color: "var(--color-text-secondary)" }}>{t.qty}</span>
             <Stepper value={qty} max={b.left} onChange={setQty} /></div>
         </div>
       </div>
 
-      <div style={{ display: "grid", gap: 8 }}>
-        <PaymentMethodRow method="knet" selected={method === "knet"} onSelect={() => setMethod("knet")}
-          label={ar ? "كي-نت" : undefined} hint={ar ? "يفتح صفحة بنكك" : undefined} />
-        <PaymentMethodRow method="applepay" selected={method === "applepay"} onSelect={() => setMethod("applepay")}
-          hint={ar ? "بصمة الوجه" : undefined} />
-      </div>
-      {paying ? <Banner tone="info" title={t.paying}>{t.payNote}</Banner> : null}
-      <Button size="lg" fullWidth loading={paying} onClick={onPay}>
-        {method === "knet" ? t.payKnet : t.payApple} · <Num>{kd(b.now * qty)}</Num></Button>
+      <ST.PaymentBlock s={s} market={market} method={method} setMethod={setMethod} qty={qty} unit={b.now} walletBal={walletBal}
+        useCredit={useCredit} setUseCredit={setUseCredit} promo={promo} setPromo={setPromo} restricted={restricted} />
+      {paying ? <Banner tone="info" title={s.opening(s[method])}>{t.payNote}</Banner> : null}
+      <Button size="lg" fullWidth loading={paying} disabled={restricted} onClick={onPay}>
+        {method === "cash" ? s.payCash : `${s.pay} · ${s[method]}`}</Button>
     </div>
   </div>;
 }
 
 /* ---------- map tab ---------- */
-function MapTab({ t, ar, go, sel, setSel }) {
+function MapTab({ t, ar, go, sel, setSel, market = "KW" }) {
+  const sc = MK(market).scale, cur = MK(market).currency;
   const b = BAGS[sel];
   return <div style={{ position: "relative", height: "100%", display: "grid", gridTemplateRows: "1fr auto" }}>
     <div style={{ position: "relative", background: "var(--color-surface-sunken)", overflow: "hidden" }}>
@@ -195,21 +196,22 @@ function MapTab({ t, ar, go, sel, setSel }) {
       </div>
       {BAGS.map((x, i) => <span key={x.id} style={{ position: "absolute", insetInlineStart: `${x.x}%`, top: `${x.y}%`, transform: "translate(-50%,-50%)" }}>
         <button onClick={() => setSel(i)} aria-label={ar ? x.pa : x.p} style={{ all: "unset", cursor: "pointer" }}>
-          <MapPin price={x.now} selected={i === sel} soldOut={x.left === 0} /></button></span>)}
+          <MapPin price={x.now * sc} currency={cur} selected={i === sel} soldOut={x.left === 0} /></button></span>)}
       <span style={{ position: "absolute", insetInlineEnd: 12, bottom: 12 }}>
         <IconButton icon="navigation" label={t.directions} variant="solid" size={40} /></span>
     </div>
     <div style={{ padding: "12px 12px 14px", background: "var(--color-surface-canvas)", borderTop: "1px solid var(--color-border-subtle)", display: "grid", gap: 8 }}>
       <Num style={{ fontSize: "var(--text-caption-size)", color: "var(--color-text-secondary)" }}>{t.pins(BAGS.length)}</Num>
       <BagCard layout="row" partner={ar ? b.pa : b.p} title={t.surprise} category={b.cat} cover={`../../assets/photos/${b.img}.png`}
-        priceNow={b.now} priceWas={b.was} from={b.from} to={b.to} distanceKm={b.km} bagsLeft={b.left} rating={b.r}
+        priceNow={b.now * sc} priceWas={b.was * sc} currency={cur} from={b.from} to={b.to} distanceKm={b.km} bagsLeft={b.left} rating={b.r}
         minutesLeft={b.m} countdownFormat={mfmt(ar)} onClick={() => go({ screen: "detail", bag: b })} />
     </div>
   </div>;
 }
 
 /* ---------- orders ---------- */
-function Orders({ t, ar, order, go, onOpen }) {
+function Orders({ t, ar, order, go, onOpen, market = "KW" }) {
+  const sc = MK(market).scale, cur = MK(market).currency;
   const [tab, setTab] = React.useState("active");
   return <div style={{ display: "grid", gap: 0, alignContent: "start" }}>
     <div style={{ padding: "16px 16px 10px", background: "var(--color-surface-raised)", borderBottom: "1px solid var(--color-border-subtle)", display: "grid", gap: 12 }}>
@@ -218,16 +220,16 @@ function Orders({ t, ar, order, go, onOpen }) {
     </div>
     {tab === "active" ? (order
       ? <div style={{ padding: 16, display: "grid", gap: 12 }}>
-          <button onClick={onOpen} style={{ all: "unset", cursor: "pointer" }}>
+          <div role="button" tabIndex={0} onClick={onOpen} onKeyDown={e => e.key === "Enter" && onOpen()} style={{ cursor: "pointer" }}>
             <Card padded style={{ display: "grid", gap: 10 }}>
               <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
                 <strong style={{ fontSize: "var(--text-label-size)", fontWeight: 600 }}>{ar ? order.bag.pa : order.bag.p}</strong>
-                <Badge tone={order.state === "redeemed" ? "fresh" : "time"}>{order.state === "redeemed" ? t.collected : t.reserved}</Badge></div>
+                <Badge tone={order.state === "redeemed" ? "fresh" : order.state === "reserved" ? "time" : order.state === "held" ? "urgent" : "neutral"}>{window.BugshaStages.S[ar ? "ar" : "en"].st[order.state]}</Badge></div>
               <PickupWindow day={ar ? "الليلة" : "Tonight"} from={order.bag.from} to={order.bag.to} />
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
                 <Num style={{ fontSize: "var(--text-title-size)", fontWeight: 600 }}>{order.code}</Num>
                 <Button size="sm">{t.code}</Button></div>
-            </Card></button>
+            </Card></div>
         </div>
       : <div style={{ padding: "28px 16px" }}><EmptyState icon="shopping-bag" title={t.noOrders} body={t.noOrdersBody}
           actionLabel={t.browseCta} onAction={() => go({ screen: "browse", tab: "browse" })} /></div>)
@@ -237,7 +239,7 @@ function Orders({ t, ar, order, go, onOpen }) {
             <strong style={{ fontSize: "var(--text-label-size)", fontWeight: 600 }}>{ar ? p.pa : p.p}</strong>
             <Num style={{ fontSize: "var(--text-caption-size)", color: "var(--color-text-secondary)" }}>{ar ? p.dateAr : p.date}</Num></div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
-            <RatingStars value={p.rated} size={15} /><PriceTag now={p.now} was={p.was} /></div>
+            <RatingStars value={p.rated} size={15} /><PriceTag now={p.now * sc} was={p.was * sc} currency={cur} /></div>
         </Card>)}
       </div>}
   </div>;
@@ -281,36 +283,48 @@ function Order({ t, ar, order, go, onRedeem, onRate, rated, told, onTell }) {
 }
 
 /* ---------- me ---------- */
-function Me({ t, ar, lang, setLang, dark, setDark, go }) {
-  const [notif, setNotif] = React.useState(true);
+function Me({ t, ar, lang, setLang, dark, setDark, go, market = "KW", profile = {}, walletBal = 0, savedCount = 0, restricted, deletion, onSignOut }) {
+  const ST = window.BugshaStages, s = ST.S[ar ? "ar" : "en"];
   return <div style={{ display: "grid", gap: 0, alignContent: "start" }}>
     <div style={{ background: "var(--color-surface-brand)", color: "#fff", padding: "18px 16px 20px", display: "grid", gap: 14 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <span style={{ width: 48, height: 48, borderRadius: "var(--radius-control)", background: "rgba(255,255,255,.22)",
-          display: "grid", placeItems: "center", fontWeight: 600, fontSize: 18 }}>{ar ? "ن" : "N"}</span>
-        <span style={{ display: "grid", gap: 2 }}>
-          <strong style={{ fontSize: "var(--text-title-size)", fontWeight: 600 }}>{t.me}</strong>
-          <span style={{ fontSize: "var(--text-caption-size)", opacity: .85 }}>{t.member}</span></span>
+          display: "grid", placeItems: "center", fontWeight: 600, fontSize: 18 }}>{(profile.first || (ar ? "ن" : "N")).slice(0, 1)}</span>
+        <span style={{ display: "grid", gap: 2, flex: 1, minWidth: 0 }}>
+          <strong style={{ fontSize: "var(--text-title-size)", fontWeight: 600 }}>{profile.first ? `${profile.first} ${(profile.last || "").slice(0, 1)}${profile.last ? "." : ""}` : t.me}</strong>
+          <span style={{ fontSize: "var(--text-caption-size)", opacity: .85 }}>{t.member} · {market === "KW" ? s.kw : s.eg}</span></span>
+        <IconButton icon="pen-line" label={s.profile} onClick={() => go({ screen: "profile" })} style={{ color: "#fff" }} />
       </div>
     </div>
     <div style={{ padding: 16, display: "grid", gap: 14 }}>
+      {restricted ? <Banner tone="error" title={s.restricted}>{s.restrictedBody("14 Sep", s.reasons.repeat_no_show)}</Banner> : null}
+      {deletion ? <Banner tone="time" title={s.deleteQueued(ST.MARKETS[market].deletionDays)} action={<Button size="sm" variant="secondary" onClick={() => go({ undelete: true })}>{ar ? "تراجع" : "Undo"}</Button>} /> : null}
       <H>{t.impact}</H>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
         <ImpactStat icon="shopping-bag" value={12} label={t.rescued} />
-        <ImpactStat icon="wallet" value="KD 41" tone="brand" label={t.kept} />
-        <ImpactStat icon="leaf" value={26} label={t.co2} />
+        <ImpactStat icon="wallet" value={ST.money(market, 41)} tone="brand" label={t.kept} />
+        <ImpactStat icon="leaf" value="10.8" label={s.kg} />
       </div>
+      <Card style={{ display: "grid", overflow: "hidden" }}>
+        <ListRow icon="wallet" label={s.walletTitle} value={<Num>{ST.money(market, walletBal)}</Num>} chevron onClick={() => go({ screen: "wallet" })} />
+        <ListRow icon="heart" label={s.saved} value={String(savedCount)} chevron onClick={() => go({ screen: "saved" })} />
+        <ListRow icon="user" label={s.profile} value={s.dietary} chevron onClick={() => go({ screen: "profile" })} />
+      </Card>
       <H>{t.settings}</H>
       <Card style={{ display: "grid", overflow: "hidden" }}>
         <ListRow icon="languages" label={t.lang} value={<SegmentedControl value={lang} onChange={setLang}
           options={[{ value: "en", label: "EN" }, { value: "ar", label: "ع" }]} />} />
         <ListRow icon="moon" label={t.theme} value={<SegmentedControl value={dark ? "dark" : "light"} onChange={v => setDark(v === "dark")}
           options={[{ value: "light", label: t.light }, { value: "dark", label: t.dark }]} />} />
-        <ListRow icon="bell" label={t.notifs} value={<Switch checked={notif} onChange={setNotif} label={t.notifs} />} />
-        <ListRow icon="credit-card" label={t.payment} value="KNET" chevron />
+        <ListRow icon="bell" label={t.notifs} chevron onClick={() => go({ screen: "notifs" })} />
+        <ListRow icon="credit-card" label={t.payment} value={market === "KW" ? "KNET" : "Card"} chevron />
         <ListRow icon="info" label={t.howto} chevron onClick={() => go({ sheet: "howto" })} />
         <ListRow icon="circle-help" label={t.help} chevron />
         <ListRow icon="file-text" label={t.terms} chevron />
+      </Card>
+      <Card style={{ display: "grid", overflow: "hidden" }}>
+        <ListRow icon="log-out" label={s.signOut} chevron onClick={onSignOut} />
+        <ListRow icon="trash-2" label={<span style={{ color: "var(--color-error)" }}>{s.deleteAcc}</span>} chevron onClick={() => go({ dialog: "delete" })} />
       </Card>
     </div>
   </div>;
