@@ -99,8 +99,8 @@ Every forced action takes a reason code from `public.reason_code` and a justific
 | ID | View | Platform | Verified |
 | --- | --- | --- | --- |
 | S-O-001 | Live: listings, bags, orders, GMV, disputes, paused stores, jobs alerting; needs-a-person list; funnel; supply vs demand | `app.ops_live_dashboard`, `ops_partner_health`, `ops_onboarding_funnel`, `ops_supply_demand` | DB |
-| S-O-010 | Partner requests: review, mark contacted, issue code, decline with reason | `public.partner_request`; `app.ops_issue_partner_code`, `ops_decline_partner_request` (port) | Assumed (this repo's design) |
-| S-O-011 | Invite codes: issued / redeemed / expired / revoked; resend; revoke | `public.partner_invite_code`; `app.ops_revoke_partner_code` (port) | Assumed |
+| S-O-010 | Partner requests: review, issue code, decline with reason | `public.partner_request`; `app.ops_issue_partner_code`, `ops_decline_partner_request` — **live at bugsha.app/ops** | DB |
+| S-O-011 | Invite codes: live / redeemed / expired / revoked; delivery state; resend; revoke | `public.partner_invite_code` (+ `emailed_at`); `app.ops_revoke_partner_code`, `ops_resend_partner_code` — **live at bugsha.app/ops** | DB |
 | S-O-020 | Partners by onboarding stage and market | `app.ops_partners(status, market)` | DB |
 | S-O-021 | Partner detail: overview + readiness checklist, documents verify/reject, contracts + set commission, stores, staff, history; approve (blocked until docs approved), activate, suspend, reinstate, reject, reliability override | `app.ops_partner_detail`, `ops_verify_document(doc, approve, reason_code, text)`, `ops_approve_partner` (requires all `market_document_requirement` approved; creates contract v1), `ops_activate_partner`, `ops_suspend_partner`, `ops_reinstate_partner`, `ops_reject_partner`, `ops_set_commission`, `ops_override_reliability` | DB · Commit ("partner detail with document verification, contract and activation") |
 | S-O-030 | Orders: filter by status/code, detail with timeline/payment/refund; force cancel (cost bearer), force redeem, extend window, reissue code, reverse redemption, resend notification | `app.ops_orders`, `ops_order_detail`, `ops_force_cancel(order, reason, cost_bearer, justification)`, `ops_force_redeem`, `ops_extend_window`, `ops_reissue_code`, `ops_reverse_redemption`, `ops_resend_notification` | DB |
@@ -125,7 +125,8 @@ Every forced action takes a reason code from `public.reason_code` and a justific
 | "Request a partner code" form on bugsha.app/partners | `site/app/components/PartnerRequest.tsx`, `site/app/partners/page.tsx`, `site/app/globals.css` | Built, type-checked, built with `next build`, driven in headless Chromium against a mocked endpoint |
 | `partner-request` edge function + `public.partner_request` table + two emails | `supabase/functions/partner-request/`, `supabase/functions/_shared/validate-partner.ts`, `supabase/migrations/20260914090000_partner_request.sql`, `supabase/functions/_shared/templates/partner-request-*.js`, previews in `emails/preview/` | Written; validator unit-tested under Node; deployed to the platform Supabase project (`fxjvxmuporiwpqalbddv`) together with the waitlist, which moved there from the paused `qrmyhruvnqmjwxcnkocj` project |
 | Invite codes, the gate on `app.submit_application`, ops RPCs | `supabase/platform/20260914094502_partner_invite_codes.sql` | **Applied to bugsha-dev** as version 20260914094502 and exercised end to end; copy into `bugsha-platform` migrations (see `supabase/platform/README.md`) |
-| Partner app screens P-001 … P-004, ops view S-O-010 / S-O-011 | kits | Designed and click-through; the Expo implementation lives in `bugsha-platform` |
+| Partner app screens P-001 … P-004 | kits | Designed and click-through; the Expo implementation lives in `bugsha-platform` (sign-up must now send `p_code`) |
+| Ops view S-O-010 / S-O-011 | `site/app/ops` | Live at bugsha.app/ops against the platform RPCs |
 
 ## Known conflicts to reconcile against the Expo apps
 

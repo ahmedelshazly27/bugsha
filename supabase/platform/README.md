@@ -30,15 +30,27 @@ restores the previous `app.submit_application` and drops everything else.
   application (pre-filled from the code) → status hub; *Request a partner code* →
   the same form the website has, posting to `partner-request`. See
   `.claude/skills/bugsha-design/ui_kits/partner/onboarding.jsx` (screens P-000 … P-013).
-- **Ops app** — a *Requests & codes* view (S-O-010 / S-O-011) that lists requests,
-  issues and revokes codes, declines with a reason. See `ui_kits/ops/screens.jsx`.
+- **Ops app** — a *Requests & codes* view (S-O-010 / S-O-011). Already live on the web at
+  `bugsha.app/ops`; port to the Expo ops app from `ui_kits/ops/screens.jsx` when convenient.
 - **Consumer app** — no change.
 
 ## Emailing the code
 
-`app.ops_issue_partner_code` records the code and returns the row (code, expiry,
-`issued_to_email`) but does not send mail: the kitchen has no app user yet, so
-`app.notify()` cannot address it. The ops console sends the email from the returned row.
+`20260914095840_partner_code_email.sql` (also applied) makes the database send it: an
+`AFTER INSERT` trigger on `partner_invite_code` posts `{code}` through pg_net to the
+`partner-code-email` edge function, signed with a shared secret kept in Supabase Vault
+(`app.hook_secret()`, service role only). The function sends *Your Bugsha partner code*
+via Resend and writes `emailed_at` / `email_error` / `email_attempts` back on the row.
+`app.ops_resend_partner_code(code)` posts again. `app.notify()` is not used because the
+kitchen has no app user yet.
+
+## The ops console
+
+`bugsha.app/ops` (this repo, `site/app/ops`) is the live S-O-010 / S-O-011 view: email
+one-time-code sign-in, then `app.ops_partner_requests`, `ops_partner_codes`,
+`ops_issue_partner_code`, `ops_decline_partner_request`, `ops_revoke_partner_code`,
+`ops_resend_partner_code`. Only `ops_manager` and `admin` can act; other ops roles see
+the queue read-only; anyone else is told they are not on the ops team.
 
 ## Until the apps catch up
 
