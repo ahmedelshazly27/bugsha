@@ -127,7 +127,7 @@ Status of each piece:
 | `partner-request` function, table, emails | Deployed to the platform Supabase project (`fxjvxmuporiwpqalbddv`) alongside the waitlist functions; validator unit-tested; previews in `emails/preview/`. Email sending needs the Resend secrets set on that project (see below) |
 | Platform SQL (`supabase/platform/`) | **Applied to bugsha-dev** as version `20260914094502_partner_invite_codes` and exercised end to end (issue → check → revoke, and the website form still writes to the reconciled table). The Expo partner app must now pass `p_code` to `app.submit_application`; the old signature is gone. Copy the file into `bugsha-platform/supabase/migrations/` so that repo's history matches; `rollback_…sql` restores the previous state |
 | Ops console: requests & codes | **Live at `bugsha.app/ops`** (email one-time-code sign-in; `app.ops_*` RPCs decide who may act). Driven end to end in headless Chromium against mocked endpoints; issue → trigger → email verified on the real project |
-| Partner app screens | Designed as working click-throughs in the design system kit; the Expo implementation lives in `bugsha-platform`, which this session could not open — until it sends `p_code`, its sign-up call fails with `BG130` |
+| Partner app screens | Implemented in `bugsha-platform` (`apps/partner/app/join/*`): join, enter code (`app.check_partner_code`, deep link `bugsha-partner://signup?code=`), application (`app.submit_application(p_code, …)`), request a code (same edge function as the site); typechecks; pgTAP coverage in `supabase/tests/10_partner_codes.sql`, run against bugsha-dev |
 
 To deploy the website side once the project is restored:
 
@@ -223,7 +223,12 @@ platform repo matches the database:
 supabase/migrations/20260914090455_waitlist_and_partner_request.sql
 supabase/platform/20260914094502_partner_invite_codes.sql
 supabase/platform/20260914095840_partner_code_email.sql
+supabase/platform/20260914110851_partner_code_client_support.sql
 ```
+
+Done on 2026-09-14: the four files sit in `bugsha-platform/supabase/migrations/`, the Expo
+partner app gained the join / code / application / request screens, and the ops console a
+`/requests` view (branch `claude/partner-code-gate` in that repo).
 
 ### Still to do
 

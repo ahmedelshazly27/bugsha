@@ -125,7 +125,7 @@ Every forced action takes a reason code from `public.reason_code` and a justific
 | "Request a partner code" form on bugsha.app/partners | `site/app/components/PartnerRequest.tsx`, `site/app/partners/page.tsx`, `site/app/globals.css` | Built, type-checked, built with `next build`, driven in headless Chromium against a mocked endpoint |
 | `partner-request` edge function + `public.partner_request` table + two emails | `supabase/functions/partner-request/`, `supabase/functions/_shared/validate-partner.ts`, `supabase/migrations/20260914090000_partner_request.sql`, `supabase/functions/_shared/templates/partner-request-*.js`, previews in `emails/preview/` | Written; validator unit-tested under Node; deployed to the platform Supabase project (`fxjvxmuporiwpqalbddv`) together with the waitlist, which moved there from the paused `qrmyhruvnqmjwxcnkocj` project |
 | Invite codes, the gate on `app.submit_application`, ops RPCs | `supabase/platform/20260914094502_partner_invite_codes.sql` | **Applied to bugsha-dev** as version 20260914094502 and exercised end to end; copy into `bugsha-platform` migrations (see `supabase/platform/README.md`) |
-| Partner app screens P-001 … P-004 | kits | Designed and click-through; the Expo implementation lives in `bugsha-platform` (sign-up must now send `p_code`) |
+| Partner app screens P-001 … P-004 | `bugsha-platform/apps/partner/app/join/*` | Implemented in Expo against `app.check_partner_code` / `submit_application(p_code, …)` / the `partner-request` function |
 | Ops view S-O-010 / S-O-011 | `site/app/ops` | Live at bugsha.app/ops against the platform RPCs |
 
 ## Known conflicts to reconcile against the Expo apps

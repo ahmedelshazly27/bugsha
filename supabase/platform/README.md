@@ -13,6 +13,14 @@ table. Copy the file, unchanged, into `bugsha-platform/supabase/migrations/` so 
 repo's history matches the database. `rollback_20260914094502_partner_invite_codes.sql`
 restores the previous `app.submit_application` and drops everything else.
 
+`20260914110851_partner_code_client_support.sql` (applied) moves the gate's error codes to
+`BG122`–`BG128` — `BG130`/`BG131` turned out to be the platform's four-eyes and re-auth codes —
+and adds `app.my_partners()` for the partner app's post-sign-in routing.
+
+**All four files are now also in `bugsha-platform/supabase/migrations/`** (ported 2026-09-14),
+alongside the Expo partner-app screens (`apps/partner/app/join/*`), the ops console's
+`/requests` view and pgTAP coverage (`supabase/tests/10_partner_codes.sql`).
+
 ## What the platform gains
 
 | Object | Purpose |
@@ -20,7 +28,7 @@ restores the previous `app.submit_application` and drops everything else.
 | `public.partner_invite_code` | Single-use `BG-XXXX-XXXX` codes, 14-day expiry, issued by an ops user, tied to a request |
 | `public.partner_request` | The website's request table (from `../migrations/20260914090455_…`), reconciled: `market` becomes the `public.market` enum, `owner_ops_user` and the invite-code link are added |
 | `app.check_partner_code(text)` | Anon-safe check for the partner app's "Enter your partner code" screen; returns `ok / invalid / expired / redeemed / revoked` plus the pre-fill |
-| `app.submit_application(p_code, …)` | **Now requires a valid code** and redeems it; the code-less signature is dropped so nothing can bypass the gate |
+| `app.submit_application(p_code, …)` | **Now requires a valid code** (`BG122`; `BG123` wrong market) and redeems it; the code-less signature is dropped so nothing can bypass the gate |
 | `app.ops_issue_partner_code`, `ops_revoke_partner_code`, `ops_decline_partner_request`, `ops_partner_requests`, `ops_partner_codes` | The ops console's "Requests & codes" view |
 
 ## Client changes this implies (Expo apps)
