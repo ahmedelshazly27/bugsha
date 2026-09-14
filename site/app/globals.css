@@ -193,3 +193,40 @@ a{color:inherit;text-decoration:none}button,a{font:inherit}button{color:inherit}
   .waitlist-form{grid-template-columns:1fr;gap:14px}
   .waitlist-form button{justify-self:stretch;text-align:center;justify-content:center}
 }
+
+/* Partner code request — the only door into a partner account (site/app/components/PartnerRequest.tsx) */
+.request-section{padding:0 max(20px,calc((100vw - 1180px)/2)) 30px;background:white}
+.request-panel{position:relative;padding:70px clamp(35px,6vw,80px);display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start;overflow:hidden;border-radius:32px;background:var(--violet);color:white}
+.request-panel::before{content:"";position:absolute;width:620px;height:620px;left:-300px;bottom:-320px;border:1px solid rgba(255,255,255,.15);border-radius:50%;box-shadow:0 0 0 100px rgba(255,255,255,.025),0 0 0 200px rgba(255,255,255,.018)}
+.request-copy{position:relative;z-index:2}
+.request-copy h2{max-width:520px;margin:20px 0 18px;font-size:clamp(40px,4.6vw,60px);line-height:.98;letter-spacing:-.055em}
+.request-copy p{max-width:480px;margin:0;color:rgba(255,255,255,.7);font-size:15px;line-height:1.65}
+.request-copy ul{margin:26px 0 0;padding:0;display:grid;gap:10px;list-style:none}
+.request-copy li{font-size:13px;color:rgba(255,255,255,.85)}
+.request-copy li::before{content:"✓";margin-right:10px;color:#c39afc}
+.request-form{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:end;text-align:left}
+.request-form label{display:grid;gap:7px;min-width:0}
+.request-form label>span,.request-form legend{font-size:10px;font-weight:850;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.request-form input,.request-form select{width:100%;height:52px;padding:0 16px;border:1px solid rgba(255,255,255,.26);border-radius:13px;background:rgba(255,255,255,.07);color:white;font-family:inherit;font-size:15px;font-weight:500;transition:border-color .3s var(--ease),background .3s var(--ease)}
+.request-form select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,rgba(255,255,255,.66) 50%),linear-gradient(135deg,rgba(255,255,255,.66) 50%,transparent 50%);background-position:calc(100% - 19px) 23px,calc(100% - 13px) 23px;background-size:6px 6px;background-repeat:no-repeat;padding-inline-end:40px;cursor:pointer}
+.request-form select option{color:var(--ink)}
+.request-form input::placeholder{color:rgba(255,255,255,.45)}
+.request-form input:focus,.request-form select:focus{outline:none;border-color:rgba(255,255,255,.62);background:rgba(255,255,255,.12)}
+.request-form input:hover,.request-form select:hover{border-color:rgba(255,255,255,.42)}
+.request-form fieldset{grid-column:1 / -1;margin:0;padding:0;border:0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.request-form fieldset legend{display:block;width:100%;margin-bottom:8px;padding:0}
+.request-form fieldset label{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid rgba(255,255,255,.26);border-radius:10px;background:rgba(255,255,255,.07);font-size:13px;font-weight:600;cursor:pointer;transition:background .25s var(--ease),border-color .25s var(--ease)}
+.request-form fieldset label:hover{border-color:rgba(255,255,255,.5)}
+.request-form fieldset label.is-on{background:white;border-color:white;color:var(--violet)}
+.request-form fieldset input{position:absolute;width:1px;height:1px;opacity:0}
+.request-form .request-wide{grid-column:1 / -1}
+.request-note{grid-column:1 / -1;margin:2px 0 0;font-size:12.5px;line-height:1.55;color:rgba(255,255,255,.55)}
+.request-form button{grid-column:1 / -1;justify-self:start;margin-top:4px}
+.request-form button[disabled]{opacity:.7;cursor:default}
+.request-done{position:relative;z-index:2;display:flex;gap:15px;align-items:flex-start;padding:22px 24px;border:1px solid rgba(255,255,255,.24);border-radius:17px;background:rgba(255,255,255,.08)}
+.request-done .kerchief{margin-top:2px;flex:none}
+.request-done strong{display:block;font-size:17px;font-weight:760;letter-spacing:-.02em}
+.request-done span{display:block;margin-top:5px;font-size:14px;line-height:1.6;color:rgba(255,255,255,.7);overflow-wrap:anywhere}
+@media (max-width:1080px){.request-panel{grid-template-columns:1fr;gap:40px}}
+@media (max-width:820px){.request-section{padding:0 24px 30px}.request-panel{padding:56px 32px;border-radius:26px}}
+@media (max-width:560px){.request-section{padding:0 10px 24px}.request-panel{padding:44px 18px;border-radius:22px}.request-copy h2{font-size:36px}.request-form{grid-template-columns:1fr}.request-form button{justify-self:stretch;text-align:center;justify-content:center}}

@@ -8,6 +8,8 @@ import { fileURLToPath } from 'node:url';
 
 import { welcomeEmail } from '../supabase/functions/_shared/templates/welcome.js';
 import { adminNotifyEmail } from '../supabase/functions/_shared/templates/admin-notify.js';
+import { partnerRequestReceivedEmail } from '../supabase/functions/_shared/templates/partner-request-received.js';
+import { partnerRequestNotifyEmail } from '../supabase/functions/_shared/templates/partner-request-notify.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = join(root, 'emails', 'preview');
@@ -32,6 +34,19 @@ const emails = [
       userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) Safari/605.1.15',
       total: 128,
       dashboardUrl: 'https://supabase.com/dashboard/project/example/editor',
+    }),
+  ],
+  [
+    'partner-request-received',
+    partnerRequestReceivedEmail({ contactName: 'Yousef Al-Kandari', tradingName: 'Kuwait Bakehouse', market: 'KW', city: 'Hawalli', categories: ['bakery', 'sweets'], branchCount: 3, siteUrl: SAMPLE.siteUrl }),
+  ],
+  [
+    'partner-request-notify',
+    partnerRequestNotifyEmail({
+      tradingName: 'Kuwait Bakehouse', legalName: 'Kuwait Bakehouse Co. W.L.L.', market: 'KW', city: 'Hawalli', categories: ['bakery', 'sweets'],
+      contactName: 'Yousef Al-Kandari', contactPhone: '+965 5512 3456', contactEmail: 'yousef@kuwaitbakehouse.com', branchCount: 3, estDailySurplus: 'KD 25',
+      referralSource: 'Founder network', source: 'site-partners', referrer: 'https://bugsha.app/partners', userAgent: 'Mozilla/5.0 (Macintosh) Safari/605.1.15',
+      openTotal: 4, dashboardUrl: 'https://bugsha-ops.vercel.app/requests?id=sample',
     }),
   ],
 ];

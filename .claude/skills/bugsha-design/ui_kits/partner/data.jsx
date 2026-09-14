@@ -149,6 +149,19 @@ const IMPACT_BRANCHES = [
 
 const PHOTO_LIBRARY = ["tone-bakehouse","tone-bread","tone-mezze","tone-cafe","tone-coop","tone-night"].map(n=>"../../assets/photos/"+n+".png");
 
-Object.assign(window, { PARTNER_PHOTOS: PHOTO_LIBRARY, PARTNER_IMPACT_BRANCHES: IMPACT_BRANCHES, PARTNER_LISTINGS: LISTINGS, PARTNER_COPY: COPY, PARTNER_ORDERS: ORDERS, PARTNER_PRESETS: PRESETS,
+const FLAGS = [
+ {id:"f1", severity:"high", cat:"Freshness", catAr:"الطزاجة", order:"KW-4812", deadline:"Tue 16 Sep", en:"Two reviews this week say the bread was from the day before. Confirm what goes in the bag after 21:00.", ar:"تقييمين هالأسبوع يقولون الخبز من أمس. أكد شنو يدخل البقشة بعد 21:00.", acked:false},
+ {id:"f2", severity:"standard", cat:"Packaging", catAr:"التغليف", order:"KW-4808", deadline:"Thu 18 Sep", en:"Customer reported a crushed box. Photo attached to the report.", ar:"زبون بلّغ عن علبة مضغوطة. الصورة مرفقة بالبلاغ.", acked:false},
+ {id:"f0", severity:"standard", cat:"Allergens", catAr:"الحساسية", order:"KW-4790", deadline:"Sun 7 Sep", en:"Nuts in a bag labelled nut-free.", ar:"مكسرات ببقشة مكتوب عليها بدون مكسرات.", acked:true, finding:"Sweets tray shared a tong with the pistachio maamoul.", action:"Separate tongs and a label on the tray."}];
+const DISPUTES = [
+ {ref:"DS-2409", severity:"critical", order:"KW-4801", deadline:"Mon 15 Sep 12:00", en:"Customer says they felt unwell after the bag (symptoms after ~3 h). Ops is reviewing; your statement is part of the record.", ar:"الزبون يقول تعب بعد البقشة (أعراض بعد حوالي 3 ساعات). التشغيل يراجع؛ ردك جزء من السجل.", sent:null},
+ {ref:"DS-2398", severity:"standard", order:"KW-4795", deadline:"Sat 13 Sep", en:"Customer says the bag had only bread, no pastries as described.", ar:"الزبون يقول البقشة فيها خبز بس، بدون معجنات مثل الوصف.", sent:"Friday's bag ran short on pastries at 21:40; we added an extra loaf. Happy to refund the difference."}];
+const STAFF_FULL = [
+ {id:"u1", en:"Yousef K.", ar:"يوسف ك.", email:"yousef@kuwaitbakehouse.com", role:"owner", wide:true, state:"claimed"},
+ {id:"u2", en:"Anitha R.", ar:"أنيثا ر.", email:"anitha@kuwaitbakehouse.com", role:"staff", wide:false, state:"claimed", shift:true},
+ {id:"u3", en:"Hassan M.", ar:"حسن م.", email:"hassan@kuwaitbakehouse.com", role:"staff", wide:false, state:"claimed"},
+ {id:"u4", en:"Dana S.", ar:"دانة س.", email:"dana@kuwaitbakehouse.com", role:"accountant", wide:true, state:"pending"}];
+
+Object.assign(window, { PARTNER_FLAGS: FLAGS, PARTNER_DISPUTES: DISPUTES, PARTNER_STAFF_FULL: STAFF_FULL, PARTNER_PHOTOS: PHOTO_LIBRARY, PARTNER_IMPACT_BRANCHES: IMPACT_BRANCHES, PARTNER_LISTINGS: LISTINGS, PARTNER_COPY: COPY, PARTNER_ORDERS: ORDERS, PARTNER_PRESETS: PRESETS,
   PARTNER_PAYOUTS: PAYOUTS, PARTNER_LEDGER: LEDGER, PARTNER_REVIEWS: REVIEWS, PARTNER_BRANCHES: BRANCHES, PARTNER_STAFF: STAFF });
 })();

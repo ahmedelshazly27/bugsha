@@ -1,8 +1,9 @@
 import React from "react";
 
-/** Deal price with struck original. KD always shows three decimals — the fils are the proof. */
-export function PriceTag({ now, was, currency = "KD", size = "md", showPercent = true, style }) {
-  const fmt = n => currency + " " + Number(n).toFixed(3);
+/** Deal price with struck original. KD always shows three decimals — the fils are the proof; EGP (and any other currency) shows two. */
+export function PriceTag({ now, was, currency = "KD", decimals, size = "md", showPercent = true, style }) {
+  const dp = decimals ?? (currency === "KD" ? 3 : 2);
+  const fmt = n => currency + " " + Number(n).toFixed(dp);
   const pct = was ? Math.round((1 - now / was) * 100) : null;
   const big = size === "lg";
   return (

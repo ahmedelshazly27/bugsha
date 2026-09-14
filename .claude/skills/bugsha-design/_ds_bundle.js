@@ -86,10 +86,12 @@ try { (() => {
 function MapPin({
   price,
   currency = "KD",
+  decimals,
   selected,
   soldOut,
   style
 }) {
+  const dp = decimals ?? (currency === "KD" ? 3 : 2);
   return /*#__PURE__*/React.createElement("span", {
     className: "ds-numeric",
     style: {
@@ -105,7 +107,7 @@ function MapPin({
       textDecoration: soldOut ? "line-through" : "none",
       ...style
     }
-  }, currency + " " + Number(price).toFixed(3));
+  }, currency + " " + Number(price).toFixed(dp));
 }
 Object.assign(__ds_scope, { MapPin });
 })(); } catch (e) { __ds_ns.__errors.push({ path: "components/commerce/MapPin.jsx", error: String((e && e.message) || e) }); }
@@ -117,11 +119,13 @@ function PriceTag({
   now,
   was,
   currency = "KD",
+  decimals,
   size = "md",
   showPercent = true,
   style
 }) {
-  const fmt = n => currency + " " + Number(n).toFixed(3);
+  const dp = decimals ?? (currency === "KD" ? 3 : 2);
+  const fmt = n => currency + " " + Number(n).toFixed(dp);
   const pct = was ? Math.round((1 - now / was) * 100) : null;
   const big = size === "lg";
   return /*#__PURE__*/React.createElement("span", {
@@ -2047,12 +2051,14 @@ try { (() => {
 function PayoutCard({
   amount,
   currency = "KD",
+  decimals,
   period,
   bags,
   nextDate,
   note,
   style
 }) {
+  const dp = decimals ?? (currency === "KD" ? 3 : 2);
   return /*#__PURE__*/React.createElement("div", {
     style: {
       display: "grid",
@@ -2082,7 +2088,7 @@ function PayoutCard({
       lineHeight: 1,
       fontWeight: "var(--weight-bold)"
     }
-  }, currency, " ", Number(amount).toFixed(3)), /*#__PURE__*/React.createElement("span", {
+  }, currency, " ", Number(amount).toFixed(dp)), /*#__PURE__*/React.createElement("span", {
     className: "ds-numeric",
     style: {
       fontSize: "var(--text-caption-size)",
