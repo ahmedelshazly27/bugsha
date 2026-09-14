@@ -17,7 +17,12 @@ restores the previous `app.submit_application` and drops everything else.
 `BG122`–`BG128` — `BG130`/`BG131` turned out to be the platform's four-eyes and re-auth codes —
 and adds `app.my_partners()` for the partner app's post-sign-in routing.
 
-**All four files are now also in `bugsha-platform/supabase/migrations/`** (ported 2026-09-14),
+`20260914111830_partner_code_status_history.sql` (applied) fixes a bug the pgTAP run caught:
+the application's status-history row cited a reason code that did not exist, so every real
+sign-up would have failed on the foreign key. It now uses the registered reason
+`partner_code` and keeps the code in `reason_text`.
+
+**All five files are now also in `bugsha-platform/supabase/migrations/`** (ported 2026-09-14),
 alongside the Expo partner-app screens (`apps/partner/app/join/*`), the ops console's
 `/requests` view and pgTAP coverage (`supabase/tests/10_partner_codes.sql`).
 
